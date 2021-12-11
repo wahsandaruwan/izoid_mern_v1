@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const PORT = 3300;
+
+// Common middleware
+app.use(cors());
+app.use(express.json());
 
 // Index route
 app.get("/", (req, res) => {
