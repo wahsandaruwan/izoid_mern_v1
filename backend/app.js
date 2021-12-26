@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const PORT = 3300;
+require("./helpers/dbCon")
 
 // Common middleware
 app.use(cors());
