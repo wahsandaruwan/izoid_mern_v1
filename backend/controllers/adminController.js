@@ -7,6 +7,19 @@ exports.adminRegistration = async (req, res) => {
     // Generate random reg number
     const adminRegNum = randomReg(adminType)
 
+    console.log(adminEmail)
+
+    // Check if reg num or email already exist
+    const admin = await Admin.find({ $or: [{ adminEmail }, { adminRegNum }] })
+    if (admin.length > 0) {
+        if (admin[0].adminEmail === adminEmail) {
+            return res.json({ errors: { message: "Email already exist!" } })
+        }
+        else if (admin[0].adminRegNum === adminRegNum) {
+            return res.json({ errors: { message: "Something went wrong, try again!" } })
+        }
+    }
+
     // Create a new admin
     const newAdmin = new Admin({
         adminRegNum,

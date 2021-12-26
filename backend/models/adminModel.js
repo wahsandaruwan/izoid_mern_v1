@@ -26,7 +26,7 @@ const adminSchema = new mongoose.Schema({
         required: [true, "Enter an user type!"],
         enum: {
             values: ["Owner", "Manager"],
-            message: "Enter either owner or manager as user type!",
+            message: "Enter either owner or manager as a user type!",
         },
     },
     adminEmail: {
