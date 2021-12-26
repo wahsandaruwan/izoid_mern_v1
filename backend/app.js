@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const PORT = 3300;
 require("./helpers/dbCon")
-const userRoutes = require("./routes/userRoutes")
+const adminRoutes = require("./routes/adminRoutes")
 
 // Common middleware
 app.use(cors());
@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // User routes middleware
-app.use('/api/users', userRoutes)
+app.use('/api/users', adminRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {
