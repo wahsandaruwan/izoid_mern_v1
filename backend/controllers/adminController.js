@@ -61,3 +61,13 @@ exports.adminLogin = async (req, res) => {
 
     res.status(200).json({ created: true, success: { message: `Successfully logged in!` } })
 }
+
+// Get all admins
+exports.getAllAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find()
+        res.status(200).json(admins)
+    } catch (err) {
+        res.json({ errors: { message: err.message } })
+    }
+}
