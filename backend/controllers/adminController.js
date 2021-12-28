@@ -71,3 +71,15 @@ exports.getAllAdmins = async (req, res) => {
         res.json({ errors: { message: err.message } })
     }
 }
+
+// Get an admin by id
+exports.getAdminById = async function (req, res) {
+    const { adminId } = req.params
+
+    try {
+        const admin = await Admin.findById(adminId)
+        res.status(200).json(admin)
+    } catch (err) {
+        res.json({ errors: { message: err.message } })
+    }
+}
