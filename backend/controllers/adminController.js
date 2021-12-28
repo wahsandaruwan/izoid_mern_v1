@@ -121,3 +121,15 @@ exports.updateAdmin = async (req, res) => {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
     }
 }
+
+// Delete an admin
+exports.deleteAdmin = async (req, res) => {
+    const { adminId } = req.params
+
+    try {
+        await Admin.findByIdAndDelete(adminId)
+        res.status(200).json({ created: true, success: { message: "Admin successfully deleted!" } })
+    } catch (err) {
+        res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
+    }
+}
