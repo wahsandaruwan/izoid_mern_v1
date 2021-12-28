@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { adminRegistration, adminLogin, getAllAdmins, getAdminById } = require("../controllers/adminController")
+const { adminRegistration, adminLogin, getAllAdmins, getAdminById, updateAdmin } = require("../controllers/adminController")
 
 // Admin registration route
 router.post("/register", adminRegistration)
@@ -13,5 +13,8 @@ router.get("/", getAllAdmins)
 
 // Get an admin by id route
 router.get("/:adminId", getAdminById)
+
+// Update an admin by id route
+router.put("/:adminId", updateAdmin)
 
 module.exports = router

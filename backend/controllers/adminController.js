@@ -83,3 +83,41 @@ exports.getAdminById = async function (req, res) {
         res.json({ errors: { message: err.message } })
     }
 }
+
+// Update an admin
+exports.updateAdmin = async (req, res) => {
+    const { adminId } = req.params
+    const { adminEmail, adminPass } = req.body
+    let updatedPass = "";
+
+    // Password hashing
+    const hashedPass = await bcrypt.hash(adminPass, 8)
+
+    // Get existing admin password by Id
+    const adminById = await Admin.findOne({ _id: adminId })
+    if (adminById) {
+        if (adminPass === "") {
+            req.body.adminPass = adminById.adminPass
+        }
+        else {
+            updatedPass = adminPass
+            // Set hashed password
+            req.body.adminPass = adminPass.length >= 6 ? hashedPass : false
+        }
+    }
+
+    // Check if email already exists
+    const adminByEmail = await Admin.findOne({ adminEmail })
+    if (adminByEmail) {
+        if (adminByEmail.id !== adminId) {
+            return res.json({ errors: { message: "Email already exist!" } })
+        }
+    }
+
+    try {
+        await Admin.findOneAndUpdate({ _id: adminId }, req.body, { new: true, runValidators: true })
+        res.status(200).json({ created: true, success: { message: "Admin successfully updated!" } })
+    } catch (err) {
+        res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
+    }
+}
