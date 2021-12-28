@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const { adminRegistration } = require("../controllers/adminController")
+const { adminRegistration, adminLogin } = require("../controllers/adminController")
 
-// User registration route
+// Admin registration route
 router.post("/register", adminRegistration)
+
+// Admin login route
+router.post("/login", adminLogin)
 
 module.exports = router
