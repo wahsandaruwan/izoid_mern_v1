@@ -13,6 +13,8 @@ exports.randomReg = (type) => {
 // Generate random jwt
 exports.randomJWT = (user) => {
     return jwt.sign({
-        id: user._id
+        id: user._id,
+        regNum: user.regNum,
+        email: user.email
     }, process.env.SECRET_KEY, { expiresIn: '1m' })
 }

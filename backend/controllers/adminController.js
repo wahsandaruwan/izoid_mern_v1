@@ -1,6 +1,6 @@
 const Admin = require("../models/adminModel")
 const bcrypt = require("bcrypt")
-const { randomReg } = require("../helpers/randomGen")
+const { randomReg, randomJWT } = require("../helpers/randomGen")
 
 // Admin registration
 exports.adminRegistration = async (req, res) => {
@@ -15,7 +15,7 @@ exports.adminRegistration = async (req, res) => {
             return res.json({ errors: { message: "Email already exist!" } })
         }
         else if (admin[0].regNum === regNum) {
-            return res.json({ errors: { message: "Something went wrong, try again!" } })
+            return res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
         }
     }
 
@@ -61,7 +61,9 @@ exports.adminLogin = async (req, res) => {
         return res.json({ errors: { message: "Wrong password!" } })
     }
 
-    res.status(200).json({ created: true, success: { message: `Successfully logged in!` } })
+    // Generate jwt
+    const jwt = randomJWT(admin)
+    res.status(200).json({ auth: true, success: jwt, regNum: admin.regNum, type: admin.type })
 }
 
 // Get all admins
