@@ -4,40 +4,42 @@ const { randomReg } = require("../helpers/randomGen")
 
 // Admin registration
 exports.adminRegistration = async (req, res) => {
-    const { adminFirstName, adminLastName, adminType, adminEmail, adminPass } = req.body;
+    const { firstName, lastName, type, email, password } = req.body;
     // Generate random reg number
-    const adminRegNum = randomReg(adminType)
-
-    // Password hashing
-    const hashedPass = await bcrypt.hash(adminPass, 8)
+    const regNum = randomReg(type)
 
     // Check if reg num or email already exist
-    const admin = await Admin.find({ $or: [{ adminEmail }, { adminRegNum }] })
+    const admin = await Admin.find({ $or: [{ email }, { regNum }] })
     if (admin.length > 0) {
-        if (admin[0].adminEmail === adminEmail) {
+        if (admin[0].email === email) {
             return res.json({ errors: { message: "Email already exist!" } })
         }
-        else if (admin[0].adminRegNum === adminRegNum) {
+        else if (admin[0].regNum === regNum) {
             return res.json({ errors: { message: "Something went wrong, try again!" } })
         }
     }
 
+    // Password hashing
+    const hashedPass = await bcrypt.hash(password, 8)
+
     // Set hashed password
-    const newPass = adminPass.length >= 6 ? hashedPass : false
+    const newPass = password.length >= 6 ? hashedPass : false
 
     // Create a new admin
     const newAdmin = new Admin({
-        adminRegNum,
-        adminFirstName,
-        adminLastName,
-        adminType,
-        adminEmail,
-        adminPass: newPass
+        regNum: regNum,
+        firstName: firstName,
+        lastName: lastName,
+        type: type,
+        email: email,
+        password: newPass
     })
+
+    console.log(newAdmin)
 
     try {
         await newAdmin.save()
-        res.status(200).json({ created: true, success: { message: `Successfully created a new ${adminType}!` } })
+        res.status(200).json({ created: true, success: { message: `Successfully created a new ${type}!` } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
     }
@@ -45,16 +47,16 @@ exports.adminRegistration = async (req, res) => {
 
 // Admin login
 exports.adminLogin = async (req, res) => {
-    const { adminRegNum, adminPass } = req.body
+    const { regNum, password } = req.body
 
     // Check if reg nuk already exists
-    const admin = await Admin.findOne({ adminRegNum })
+    const admin = await Admin.findOne({ regNum })
     if (!admin) {
         return res.json({ errors: { message: "Wrong registration number!" } })
     }
 
     // Check if password matches
-    const passOk = await bcrypt.compare(adminPass, admin.adminPass)
+    const passOk = await bcrypt.compare(password, admin.password)
     if (!passOk) {
         return res.json({ errors: { message: "Wrong password!" } })
     }
@@ -74,10 +76,10 @@ exports.getAllAdmins = async (req, res) => {
 
 // Get an admin by id
 exports.getAdminById = async function (req, res) {
-    const { adminId } = req.params
+    const { id } = req.params
 
     try {
-        const admin = await Admin.findById(adminId)
+        const admin = await Admin.findById(id)
         res.status(200).json(admin)
     } catch (err) {
         res.json({ errors: { message: err.message } })
@@ -86,38 +88,38 @@ exports.getAdminById = async function (req, res) {
 
 // Update an admin
 exports.updateAdmin = async (req, res) => {
-    const { adminId } = req.params
-    const { adminEmail, adminPass } = req.body
+    const { id } = req.params
+    const { email, password } = req.body
     let updatedPass = "";
 
     // Get existing admin password by Id
-    const adminById = await Admin.findOne({ _id: adminId })
+    const adminById = await Admin.findOne({ _id: id })
     console.log(adminById)
     if (adminById) {
-        if (!adminPass) {
-            req.body.adminPass = adminById.adminPass
+        if (!password) {
+            req.body.password = adminById.password
         }
         else {
-            updatedPass = adminPass
+            updatedPass = password
 
             // Password hashing
-            const hashedPass = await bcrypt.hash(adminPass, 8)
+            const hashedPass = await bcrypt.hash(password, 8)
 
             // Set hashed password
-            req.body.adminPass = adminPass.length >= 6 ? hashedPass : false
+            req.body.password = password.length >= 6 ? hashedPass : false
         }
     }
 
     // Check if email already exists
-    const adminByEmail = await Admin.findOne({ adminEmail })
+    const adminByEmail = await Admin.findOne({ email })
     if (adminByEmail) {
-        if (adminByEmail.id !== adminId) {
+        if (adminByEmail.id !== id) {
             return res.json({ errors: { message: "Email already exist!" } })
         }
     }
 
     try {
-        await Admin.findOneAndUpdate({ _id: adminId }, req.body, { new: true, runValidators: true })
+        await Admin.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidators: true })
         res.status(200).json({ created: true, success: { message: "Admin successfully updated!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -126,10 +128,10 @@ exports.updateAdmin = async (req, res) => {
 
 // Delete an admin
 exports.deleteAdmin = async (req, res) => {
-    const { adminId } = req.params
+    const { id } = req.params
 
     try {
-        await Admin.findByIdAndDelete(adminId)
+        await Admin.findByIdAndDelete(id)
         res.status(200).json({ created: true, success: { message: "Admin successfully deleted!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -142,7 +144,7 @@ exports.getAdminsBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const admins = await Admin.find({ $or: [{ adminFirstName: regexQuery }, { adminLastName: regexQuery }, { adminEmail: regexQuery }, { adminType: regexQuery }] })
+        const admins = await Admin.find({ $or: [{ firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { type: regexQuery }] })
         res.status(200).json(admins)
     } catch (err) {
         res.json({ errors: { message: err.message } })

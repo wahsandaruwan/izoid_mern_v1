@@ -12,13 +12,13 @@ router.post("/login", adminLogin)
 router.get("/", getAllAdmins)
 
 // Get an admin by id route
-router.get("/:adminId", getAdminById)
+router.get("/:id", getAdminById)
 
 // Update an admin route
-router.put("/:adminId", updateAdmin)
+router.put("/:id", updateAdmin)
 
 // Delete an admin route
-router.delete("/:adminId", deleteAdmin)
+router.delete("/:id", deleteAdmin)
 
 // Get admins by search query
 router.get("/search/:searchQuery", getAdminsBySearch)
