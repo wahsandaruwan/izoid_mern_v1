@@ -90,17 +90,19 @@ exports.updateAdmin = async (req, res) => {
     const { adminEmail, adminPass } = req.body
     let updatedPass = "";
 
-    // Password hashing
-    const hashedPass = await bcrypt.hash(adminPass, 8)
-
     // Get existing admin password by Id
     const adminById = await Admin.findOne({ _id: adminId })
+    console.log(adminById)
     if (adminById) {
-        if (adminPass === "") {
+        if (!adminPass) {
             req.body.adminPass = adminById.adminPass
         }
         else {
             updatedPass = adminPass
+
+            // Password hashing
+            const hashedPass = await bcrypt.hash(adminPass, 8)
+
             // Set hashed password
             req.body.adminPass = adminPass.length >= 6 ? hashedPass : false
         }
@@ -131,5 +133,18 @@ exports.deleteAdmin = async (req, res) => {
         res.status(200).json({ created: true, success: { message: "Admin successfully deleted!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
+    }
+}
+
+// Get admins by search query
+exports.getAdminsBySearch = async (req, res) => {
+    const { searchQuery } = req.params
+
+    try {
+        const regexQuery = new RegExp(searchQuery, 'i')
+        const admins = await Admin.find({ $or: [{ adminFirstName: regexQuery }, { adminLastName: regexQuery }, { adminEmail: regexQuery }, { adminType: regexQuery }] })
+        res.status(200).json(admins)
+    } catch (err) {
+        res.json({ errors: { message: err.message } })
     }
 }

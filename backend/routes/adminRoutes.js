@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { adminRegistration, adminLogin, getAllAdmins, getAdminById, updateAdmin, deleteAdmin } = require("../controllers/adminController")
+const { adminRegistration, adminLogin, getAllAdmins, getAdminById, updateAdmin, deleteAdmin, getAdminsBySearch } = require("../controllers/adminController")
 
 // Admin registration route
 router.post("/register", adminRegistration)
@@ -19,5 +19,8 @@ router.put("/:adminId", updateAdmin)
 
 // Delete an admin route
 router.delete("/:adminId", deleteAdmin)
+
+// Get admins by search query
+router.get("/search/:searchQuery", getAdminsBySearch)
 
 module.exports = router
