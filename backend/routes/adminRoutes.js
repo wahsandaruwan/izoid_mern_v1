@@ -10,18 +10,18 @@ router.post("/register", authUser, adminRegistration)
 router.post("/login", adminLogin)
 
 // Get all admins route
-router.get("/", getAllAdmins)
+router.get("/", authUser, getAllAdmins)
 
 // Get an admin by id route
-router.get("/:id", getAdminById)
+router.get("/:id", authUser, getAdminById)
 
 // Update an admin route
-router.put("/:id", updateAdmin)
+router.put("/:id", authUser, updateAdmin)
 
 // Delete an admin route
-router.delete("/:id", deleteAdmin)
+router.delete("/:id", authUser, deleteAdmin)
 
 // Get admins by search query
-router.get("/search/:searchQuery", getAdminsBySearch)
+router.get("/search/:searchQuery", authUser, getAdminsBySearch)
 
 module.exports = router
