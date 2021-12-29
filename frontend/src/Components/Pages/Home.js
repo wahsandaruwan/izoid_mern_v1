@@ -76,6 +76,9 @@ const Home = () => {
         <>
             <section className="main-sec">
                 <div className="home-content">
+                    <div className="logo">
+                        <h2>Izoid <br></br>Center</h2>
+                    </div>
                     <h1 className="heading">Welcome to Izoid Center Portal</h1>
                     <div className="lg-frm">
                         <h2>Login</h2>

@@ -76,7 +76,8 @@ a {
   padding: 30px;
 }
 
-.nav-menu .logo h2 {
+.nav-menu .logo h2,
+.home-content .logo h2 {
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
@@ -84,6 +85,7 @@ a {
   color: #fff;
   padding: 25px 20px;
   border-radius: 50%;
+  border: 2px #fff solid;
 }
 
 .nav-menu .menu li {
@@ -162,7 +164,7 @@ a {
   font-size: 2.5rem;
   font-weight: 500;
   color: #fff;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .home-content .lg-frm {
