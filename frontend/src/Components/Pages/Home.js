@@ -30,10 +30,10 @@ const Home = () => {
     }
 
     // Redirect to dashboard if user logged in
-    // const userLoginData = localStorage.getItem("userLogin")
-    // if (userLoginData) {
-    //     history.push("/dashboard")
-    // }
+    const userLoginData = localStorage.getItem("userLogin")
+    if (userLoginData) {
+        history.push("/dashboard")
+    }
 
     // Login handler
     const loginHandler = async (e) => {
@@ -49,7 +49,10 @@ const Home = () => {
             // Validate
             if (data.auth) {
                 setError("")
-                console.log(data)
+                // Save login data in local storage
+                localStorage.setItem("userLogin", JSON.stringify(data))
+                // Navigate to dashboard
+                history.push("/dashboard")
             }
             else {
                 throw Error(data.errors.message)
