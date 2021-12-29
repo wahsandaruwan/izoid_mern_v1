@@ -12,7 +12,7 @@ const Home = () => {
     const [error, setError] = useState("")
 
     // Api request configurations
-    const configCommon = {
+    const configPost = {
         headers: {
             "Content-Type": "application/json"
         }
@@ -51,10 +51,10 @@ const Home = () => {
                 setError("Enter a password")
             }
             else {
-                const { data } = await axios.post(`http://localhost:3300/api/users/login`, {
+                const { data } = await axios.post(`http://localhost:3300/api/admins/login`, {
                     regNum: regNum,
                     password: password
-                }, configCommon)
+                }, configPost)
 
                 // Validate
                 if (data.auth) {

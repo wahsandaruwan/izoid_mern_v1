@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // User routes middleware
-app.use('/api/users', adminRoutes)
+app.use('/api/admins', adminRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {

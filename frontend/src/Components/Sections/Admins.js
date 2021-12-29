@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import axios from "axios"
 
@@ -7,6 +7,7 @@ import SubmitBtn from "../Elements/SubmitBtn"
 
 const Admins = () => {
     // Admin data states
+    const [admins, setAdmins] = useState("")
     const [regNum, setRegNum] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -15,10 +16,14 @@ const Admins = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
 
+    // Get jwt from local storage
+    const userLoginData = localStorage.getItem("userLogin")
+    const { token } = JSON.parse(userLoginData)
+
     // Api request configurations
     const configCommon = {
         headers: {
-            "Content-Type": "application/json"
+            "Authorization": `Bearer ${token}`
         }
     }
 
@@ -36,14 +41,28 @@ const Admins = () => {
         setPassword(newVal)
     }
 
-    // Redirect to dashboard if user logged in
-    const userLoginData = localStorage.getItem("userLogin")
-    if (userLoginData) {
-        history.push("/dashboard")
+    // Admin fetch handler
+    const adminFetchHandler = async () => {
+        try {
+            const { data } = await axios.get(`http://localhost:3300/api/admins/`, configCommon)
+            if (data.authEx) {
+                alert(data.errors.message)
+                // Clear local storage
+                localStorage.clear()
+                history.push("/")
+            }
+            else {
+                setAdmins(data)
+            }
+        } catch (err) {
+            alert(err.message)
+        }
     }
 
-    // Admin fetch handler
-
+    // Handle fetching all admins
+    useEffect(() => {
+        adminFetchHandler()
+    }, [])
 
     return (
         <>
@@ -75,34 +94,25 @@ const Admins = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>f54355</td>
-                                    <td>dfgdfh</td>
-                                    <td>ngfmfdf</td>
-                                    <td>hffj</td>
-                                    <td>fgdffh@dgdg.lk</td>
-                                    <td>
-                                        <a href="#">Edit</a>
-                                    </td>
-                                    <td>
-                                        <a href="#">Delete</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>f54355</td>
-                                    <td>dfgdfh</td>
-                                    <td>ngfmfdf</td>
-                                    <td>hffj</td>
-                                    <td>fgdffh@dgdg.lk</td>
-                                    <td>
-                                        <a href="#">Edit</a>
-                                    </td>
-                                    <td>
-                                        <a href="#">Delete</a>
-                                    </td>
-                                </tr>
+                                {
+                                    admins.length > 0 && (
+                                        admins.map((obj, index) => {
+                                            const { _id, regNum, firstName, lastName, type, email } = obj
+                                            return (
+                                                <tr key={_id}>
+                                                    <td>{index + 1}</td>
+                                                    <td>{regNum}</td>
+                                                    <td>{firstName}</td>
+                                                    <td>{lastName}</td>
+                                                    <td>{type}</td>
+                                                    <td>{email}</td>
+                                                    <td className="td-btn td-edit"><a>Edit</a></td>
+                                                    <td className="td-btn td-del"><a>Delete</a></td>
+                                                </tr>
+                                            )
+                                        })
+                                    )
+                                }
                             </tbody>
                         </table>
                     </div>

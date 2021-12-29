@@ -61,7 +61,7 @@ exports.adminLogin = async (req, res) => {
 
     // Generate jwt
     const jwt = randomJWT(admin)
-    res.status(200).json({ auth: true, success: jwt, regNum: admin.regNum, firstName: admin.firstName, type: admin.type })
+    res.status(200).json({ auth: true, token: jwt, regNum: admin.regNum, firstName: admin.firstName, type: admin.type })
 }
 
 // Get all admins
