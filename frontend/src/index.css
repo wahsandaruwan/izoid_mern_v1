@@ -86,8 +86,51 @@ a {
   border-radius: 50%;
 }
 
+.nav-menu .menu li {
+  border-top: 2px solid #03b496;
+}
+
+.nav-menu .menu li:last-child {
+  border-bottom: 2px solid #03b496;
+}
+
 .nav-menu .menu li a {
+  display: block;
+  padding: 20px;
   color: #065c4d;
+}
+
+.nav-menu .menu li a:hover {
+  background-color: #03b496;
+  color: #fff;
+}
+
+.nav-menu .user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+.nav-menu .user h3 {
+  color: #065c4d;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.user .lgo-btn {
+  background-color: #03b496;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: 2px #03b496 solid;
+}
+
+.user .lgo-btn:hover {
+  background-color: #fff;
+  color: #03b496;
 }
 
 /* -----Submit button----- */
@@ -144,3 +187,5 @@ a {
   align-items: center;
   flex-direction: column;
 }
+
+/* --------Dashboard page-------- */
