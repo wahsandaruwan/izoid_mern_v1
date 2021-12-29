@@ -22,10 +22,12 @@ const Home = () => {
 
     // Update states
     const regNumState = (newVal) => {
+        setError("")
         setRegNum(newVal)
     }
 
     const passwordState = (newVal) => {
+        setError("")
         setPassword(newVal)
     }
 
@@ -41,21 +43,29 @@ const Home = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/users/login`, {
-                regNum: regNum,
-                password: password
-            }, configCommon)
-
-            // Validate
-            if (data.auth) {
-                setError("")
-                // Save login data in local storage
-                localStorage.setItem("userLogin", JSON.stringify(data))
-                // Navigate to dashboard
-                history.push("/dashboard")
+            if (regNum === "") {
+                setError("Enter a registration number")
+            }
+            else if (password === "") {
+                setError("Enter a password")
             }
             else {
-                throw Error(data.errors.message)
+                const { data } = await axios.post(`http://localhost:3300/api/users/login`, {
+                    regNum: regNum,
+                    password: password
+                }, configCommon)
+
+                // Validate
+                if (data.auth) {
+                    setError("")
+                    // Save login data in local storage
+                    localStorage.setItem("userLogin", JSON.stringify(data))
+                    // Navigate to dashboard
+                    history.push("/dashboard")
+                }
+                else {
+                    throw Error(data.errors.message)
+                }
             }
         } catch (err) {
             setError(err.message)
@@ -69,10 +79,11 @@ const Home = () => {
                     <h1 className="heading">Welcome to Izoid Center Portal</h1>
                     <div className="lg-frm">
                         <h2>Login</h2>
-                        <form action="">
+                        <form>
                             <InputBox placeText="Registration Number" type="text" inputState={regNumState} />
                             <InputBox placeText="Password" type="password" inputState={passwordState} />
                             <SubmitBtn text="Login" clickFunc={loginHandler} />
+                            {error && <div className="err-msg">{error}</div>}
                         </form>
                     </div>
                 </div>

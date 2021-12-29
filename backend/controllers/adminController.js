@@ -47,7 +47,7 @@ exports.adminRegistration = async (req, res) => {
 exports.adminLogin = async (req, res) => {
     const { regNum, password } = req.body
 
-    // Check if reg nuk already exists
+    // Check if reg num already exists
     const admin = await Admin.findOne({ regNum })
     if (!admin) {
         return res.json({ errors: { message: "Wrong registration number!" } })
