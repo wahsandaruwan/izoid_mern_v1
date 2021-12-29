@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const { adminRegistration, adminLogin, getAllAdmins, getAdminById, updateAdmin, deleteAdmin, getAdminsBySearch } = require("../controllers/adminController")
+const { authUser } = require("../middleware/auth")
 
 // Admin registration route
-router.post("/register", adminRegistration)
+router.post("/register", authUser, adminRegistration)
 
 // Admin login route
 router.post("/login", adminLogin)

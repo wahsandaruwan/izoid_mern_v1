@@ -35,8 +35,6 @@ exports.adminRegistration = async (req, res) => {
         password: newPass
     })
 
-    console.log(newAdmin)
-
     try {
         await newAdmin.save()
         res.status(200).json({ created: true, success: { message: `Successfully created a new ${type}!` } })
@@ -63,7 +61,7 @@ exports.adminLogin = async (req, res) => {
 
     // Generate jwt
     const jwt = randomJWT(admin)
-    res.status(200).json({ auth: true, success: jwt, regNum: admin.regNum, type: admin.type })
+    res.status(200).json({ auth: true, success: jwt, regNum: admin.regNum, firstName: admin.firstName, type: admin.type })
 }
 
 // Get all admins
