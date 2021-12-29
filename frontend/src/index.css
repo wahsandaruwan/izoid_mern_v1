@@ -110,7 +110,7 @@ a {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 20px 0;
+  margin: 90px 0 15px 0;
 }
 
 .nav-menu .user h3 {
@@ -189,3 +189,9 @@ a {
 }
 
 /* --------Dashboard page-------- */
+.welcome-msg {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #fff;
+  margin-top: 20vh;
+}

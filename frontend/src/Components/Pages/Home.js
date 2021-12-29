@@ -44,7 +44,7 @@ const Home = () => {
         // Api call
         try {
             if (regNum === "") {
-                setError("Enter a registration number")
+                setError("Enter a registration code")
             }
             else if (password === "") {
                 setError("Enter a password")
@@ -80,7 +80,7 @@ const Home = () => {
                     <div className="lg-frm">
                         <h2>Login</h2>
                         <form>
-                            <InputBox placeText="Registration Number" type="text" inputState={regNumState} />
+                            <InputBox placeText="Registration Code" type="text" inputState={regNumState} />
                             <InputBox placeText="Password" type="password" inputState={passwordState} />
                             <SubmitBtn text="Login" clickFunc={loginHandler} />
                             {error && <div className="err-msg">{error}</div>}

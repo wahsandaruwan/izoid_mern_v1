@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom";
 
-const NavBar = ({ loggedUser }) => {
+const NavBar = () => {
+    // Logged user state
+    const [loggedUser, setLoggedUser] = useState("")
+
     // Set history
     const history = useHistory()
+
+    // Get user data from local storage
+    const getUserData = () => {
+        const userLoginData = localStorage.getItem("userLogin")
+        if (userLoginData) {
+            const { firstName } = JSON.parse(userLoginData)
+            setLoggedUser(firstName)
+        }
+    }
+    useEffect(() => {
+        getUserData()
+    }, [])
 
     // Logout handler
     const logoutHandler = (e) => {
@@ -22,6 +38,7 @@ const NavBar = ({ loggedUser }) => {
                     <li><a href="#">Manage Teachers</a></li>
                     <li><a href="#">Manage Subjects</a></li>
                     <li><a href="#">Manage Groups</a></li>
+                    <li><a href="#">Manage Admins</a></li>
                 </ul>
                 <div className="user">
                     <h3>Welcome {loggedUser}!</h3>
