@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400;1,500&display=swap");
+
+/* --------Reset Document-------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+
+/* --------Common-------- */
+body {
+  background-color: #03b496;
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease-in;
+}
+
+.main-sec {
+  min-height: 80vh;
+  background-color: #03b496;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inp-box {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 15px;
+  border: 2px #03b496 solid;
+  outline: none;
+}
+
+.su-btn {
+  background-color: #03b496;
+  color: #fff;
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px #03b496 solid;
+}
+
+.su-btn:hover {
+  background-color: #fff;
+  color: #03b496;
+}
+
+/* --------Home page-------- */
+.home-content {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.home-content .heading {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.home-content .lg-frm {
+  max-width: 280px;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+  padding: 25px 30px;
+  border-radius: 20px;
+}
+
+.home-content .lg-frm h2 {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: #03b496;
+  margin-bottom: 15px;
+}
+
+.home-content .lg-frm form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

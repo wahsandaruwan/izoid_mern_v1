@@ -75,7 +75,7 @@ exports.getAllAdmins = async (req, res) => {
 }
 
 // Get an admin by id
-exports.getAdminById = async function (req, res) {
+exports.getAdminById = async (req, res) => {
     const { id } = req.params
 
     try {
