@@ -1,3 +1,6 @@
+import InputBox from "../Elements/InputBox"
+import SubmitBtn from "../Elements/SubmitBtn"
+
 const Home = () => {
     return (
         <>
@@ -7,9 +10,9 @@ const Home = () => {
                     <div className="lg-frm">
                         <h2>Login</h2>
                         <form action="">
-                            <input className="inp-box" type="text" />
-                            <input className="inp-box" type="text" />
-                            <a href="" className="su-btn">Login</a>
+                            <InputBox placeText="Registration Number" type="text" />
+                            <InputBox placeText="Password" type="password" />
+                            <SubmitBtn text="Login" />
                         </form>
                     </div>
                 </div>

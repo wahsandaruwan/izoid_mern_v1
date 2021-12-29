@@ -19,6 +19,7 @@ a {
   text-decoration: none;
   color: #fff;
   font-size: 1rem;
+  cursor: pointer;
   transition: all 0.3s ease-in;
 }
 
@@ -39,6 +40,11 @@ a {
   border-radius: 15px;
   border: 2px #03b496 solid;
   outline: none;
+}
+
+.inp-box::placeholder {
+  font-size: 0.8rem;
+  color: #065c4d;
 }
 
 /* -----Submit button----- */
