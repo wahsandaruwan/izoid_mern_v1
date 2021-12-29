@@ -1,5 +1,6 @@
-import Home from "./Components/Pages/Home"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
+
+import Home from "./Components/Pages/Home"
 import Dashboard from "./Components/Pages/Dashboard";
 
 const App = () => {

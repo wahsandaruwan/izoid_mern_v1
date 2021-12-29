@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom";
 
-const NavBar = () => {
+const NavBar = ({ displaySec, activeSec }) => {
     // Logged user state
     const [loggedUser, setLoggedUser] = useState("")
 
@@ -34,11 +34,13 @@ const NavBar = () => {
                     <h2>Izoid <br></br>Center</h2>
                 </div>
                 <ul className="menu">
-                    <li><a href="#">Manage Students</a></li>
-                    <li><a href="#">Manage Teachers</a></li>
-                    <li><a href="#">Manage Subjects</a></li>
-                    <li><a href="#">Manage Groups</a></li>
-                    <li><a href="#">Manage Admins</a></li>
+                    <li><a className={`${activeSec === "classes" ? "active" : ""}`} onClick={(e) => displaySec("classes")}>Manage Classes</a></li>
+                    <li><a className={`${activeSec === "students" ? "active" : ""}`} onClick={(e) => displaySec("students")}>Manage Students</a></li>
+                    <li><a className={`${activeSec === "teachers" ? "active" : ""}`} onClick={(e) => displaySec("teachers")}>Manage Teachers</a></li>
+                    <li><a className={`${activeSec === "subjects" ? "active" : ""}`} onClick={(e) => displaySec("subjects")}>Manage Subjects</a></li>
+                    <li><a className={`${activeSec === "grades" ? "active" : ""}`} onClick={(e) => displaySec("grades")}>Manage Grades</a></li>
+                    <li><a className={`${activeSec === "groups" ? "active" : ""}`} onClick={(e) => displaySec("groups")}>Manage Groups</a></li>
+                    <li><a className={`${activeSec === "admins" ? "active" : ""}`} onClick={(e) => displaySec("admins")}>Manage Admins</a></li>
                 </ul>
                 <div className="user">
                     <h3>Welcome {loggedUser}!</h3>

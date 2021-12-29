@@ -103,6 +103,11 @@ a {
 }
 
 .nav-menu .menu li a:hover {
+  background-color: #05c9a8;
+  color: #fff;
+}
+
+.active {
   background-color: #03b496;
   color: #fff;
 }
@@ -191,9 +196,3 @@ a {
 }
 
 /* --------Dashboard page-------- */
-.welcome-msg {
-  font-size: 2.5rem;
-  font-weight: 500;
-  color: #fff;
-  margin-top: 20vh;
-}

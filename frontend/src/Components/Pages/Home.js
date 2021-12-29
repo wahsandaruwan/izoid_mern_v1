@@ -1,8 +1,9 @@
-import InputBox from "../Elements/InputBox"
-import SubmitBtn from "../Elements/SubmitBtn"
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import axios from "axios"
+
+import InputBox from "../Elements/InputBox"
+import SubmitBtn from "../Elements/SubmitBtn"
 
 const Home = () => {
     // Login states
