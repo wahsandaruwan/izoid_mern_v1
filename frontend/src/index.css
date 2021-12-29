@@ -22,6 +22,7 @@ a {
   transition: all 0.3s ease-in;
 }
 
+/* -----Section----- */
 .main-sec {
   min-height: 80vh;
   background-color: #03b496;
@@ -30,6 +31,7 @@ a {
   align-items: center;
 }
 
+/* -----Input box----- */
 .inp-box {
   width: 100%;
   padding: 10px;
@@ -39,6 +41,7 @@ a {
   outline: none;
 }
 
+/* -----Submit button----- */
 .su-btn {
   background-color: #03b496;
   color: #fff;
