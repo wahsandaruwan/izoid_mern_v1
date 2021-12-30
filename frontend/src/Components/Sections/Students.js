@@ -115,7 +115,7 @@ const Students = () => {
         setEmail("")
         setPassword("")
 
-        // Clear selected admin id
+        // Clear selected student id
         setStudentId("")
 
         // Clear error and success

@@ -48,7 +48,7 @@ const Subjects = () => {
         // Clear input fields
         setName("")
 
-        // Clear selected admin id
+        // Clear selected subject id
         setSubjectId("")
 
         // Clear error and success

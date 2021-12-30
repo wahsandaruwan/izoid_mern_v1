@@ -80,7 +80,7 @@ const Teachers = () => {
         setEmail("")
         setPassword("")
 
-        // Clear selected admin id
+        // Clear selected teacher id
         setTeacherId("")
 
         // Clear error and success

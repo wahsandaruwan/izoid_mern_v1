@@ -48,7 +48,7 @@ const Grades = () => {
         // Clear input fields
         setName("")
 
-        // Clear selected admin id
+        // Clear selected grade id
         setGradeId("")
 
         // Clear error and success
@@ -240,7 +240,7 @@ const Grades = () => {
                         <h2>Manage Grades</h2>
                         <form>
                             <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
-                            <SubmitBtn clickFunc={!gradeId ? gradeCreateHandler : gradeUpdateHandler} text={!gradeId ? "Add a Subject" : "Update a Subject"} />
+                            <SubmitBtn clickFunc={!gradeId ? gradeCreateHandler : gradeUpdateHandler} text={!gradeId ? "Add a Grade" : "Update a Grade"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
                                 <div className="msg err">{error}</div>
