@@ -2,23 +2,16 @@ import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom";
 
 const NavBar = ({ displaySec, activeSec }) => {
-    // Logged user state
-    const [loggedUser, setLoggedUser] = useState("")
-
     // Set history
     const history = useHistory()
 
-    // Get user data from local storage
-    const getUserData = () => {
-        const userLoginData = localStorage.getItem("userLogin")
-        if (userLoginData) {
-            const { firstName } = JSON.parse(userLoginData)
-            setLoggedUser(firstName)
-        }
+    // Get jwt from local storage
+    const userLoginData = localStorage.getItem("userLogin")
+    let loggedUser = ""
+    if (userLoginData) {
+        const { firstName } = JSON.parse(userLoginData)
+        loggedUser = firstName
     }
-    useEffect(() => {
-        getUserData()
-    }, [])
 
     // Logout handler
     const logoutHandler = (e) => {

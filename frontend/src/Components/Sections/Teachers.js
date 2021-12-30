@@ -19,19 +19,23 @@ const Teachers = () => {
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
-    const { token } = JSON.parse(userLoginData)
+    let jwt = ""
+    if (userLoginData) {
+        const { token } = JSON.parse(userLoginData)
+        jwt = token
+    }
 
     // Api request configurations
     const configCommon = {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${jwt}`
         }
     }
 
     const configPost = {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${jwt}`
         }
     }
 

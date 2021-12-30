@@ -34,19 +34,23 @@ const Combinations = () => {
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
-    const { token } = JSON.parse(userLoginData)
+    let jwt = ""
+    if (userLoginData) {
+        const { token } = JSON.parse(userLoginData)
+        jwt = token
+    }
 
     // Api request configurations
     const configCommon = {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${jwt}`
         }
     }
 
     const configPost = {
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${jwt}`
         }
     }
 
@@ -376,7 +380,6 @@ const Combinations = () => {
                 history.push("/")
             }
             else {
-                console.log(data)
                 setStudents(data)
             }
         } catch (err) {
@@ -456,12 +459,6 @@ const Combinations = () => {
                                         )
                                     }
                                 </datalist>
-                                {/* <label className="drop-text" htmlFor="drop-down5">Teacher's Reg. Code</label>
-                                <select id="drop-down5" value={teacherReg} className="frm-drop" onChange={(e) => teacherRegState(e.target.value)}>
-                                    <option value=""></option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Owner">Owner</option>
-                                </select> */}
                             </div>
                             <div className="select-box">
                                 <InputBox placeText="Student's Reg. Code" dataList="students-reg" defaultValue={studentReg} type="text" inputState={studentRegState} />
@@ -477,12 +474,6 @@ const Combinations = () => {
                                         )
                                     }
                                 </datalist>
-                                {/* <label className="drop-text" htmlFor="drop-down6">Student's Reg. Code</label>
-                                <select id="drop-down6" value={studentReg} className="frm-drop" onChange={(e) => studentRegState(e.target.value)}>
-                                    <option value=""></option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Owner">Owner</option>
-                                </select> */}
                             </div>
                             <SubmitBtn clickFunc={!combinationId ? combinationCreateHandler : combinationUpdateHandler} text={!combinationId ? "Add a Combination" : "Update a Combination"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
