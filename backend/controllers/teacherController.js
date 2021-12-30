@@ -1,6 +1,7 @@
 const Teacher = require("../models/teacherModel")
 const bcrypt = require("bcrypt")
 const { randomReg } = require("../helpers/randomGen")
+const { sendEmail } = require('../helpers/sendEmail')
 
 // Teacher registration
 exports.teacherRegistration = async (req, res) => {
@@ -48,6 +49,8 @@ exports.teacherRegistration = async (req, res) => {
 
     try {
         await newTeacher.save()
+        // Send email to new teacher
+        sendEmail(email, regNum, `Your Izoid Teacher account has been successfully created!`, password)
         res.status(200).json({ created: true, success: { message: `Successfully created a new Teacher!` } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -109,6 +112,10 @@ exports.updateTeacher = async (req, res) => {
 
     try {
         await Teacher.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidators: true })
+        // Send email to teacher
+        if (updatedPass) {
+            sendEmail(email, teacherById.regNum, `Your Izoid Teacher account password has been updated!`, password)
+        }
         res.status(200).json({ created: true, success: { message: "Teacher successfully updated!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })

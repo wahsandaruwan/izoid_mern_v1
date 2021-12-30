@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import axios from "axios"
-import DatePicker from "react-datepicker"
-// import DateTimePicker from 'react-datetime-picker';
-import "react-datepicker/dist/react-datepicker.css"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"

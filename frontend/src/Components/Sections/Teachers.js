@@ -178,6 +178,7 @@ const Teachers = () => {
             else {
                 setFirstName(data.firstName)
                 setLastName(data.lastName)
+                setPhone(data.phone)
                 setEmail(data.email)
             }
         } catch (err) {

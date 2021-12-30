@@ -1,6 +1,7 @@
 const Admin = require("../models/adminModel")
 const bcrypt = require("bcrypt")
 const { randomReg, randomJWT } = require("../helpers/randomGen")
+const { sendEmail } = require('../helpers/sendEmail')
 
 // Admin registration
 exports.adminRegistration = async (req, res) => {
@@ -47,6 +48,8 @@ exports.adminRegistration = async (req, res) => {
 
     try {
         await newAdmin.save()
+        // Send email to new admin
+        sendEmail(email, regNum, `Your Izoid ${type} Admin account has been successfully created!`, password)
         res.status(200).json({ created: true, success: { message: `Successfully created a new ${type}!` } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -100,7 +103,7 @@ exports.getAdminById = async (req, res) => {
 exports.updateAdmin = async (req, res) => {
     const { id } = req.params
     const { email, password } = req.body
-    let updatedPass = "";
+    let updatedPass = ""
 
     // Get existing admin password by Id
     const adminById = await Admin.findOne({ _id: id })
@@ -129,6 +132,10 @@ exports.updateAdmin = async (req, res) => {
 
     try {
         await Admin.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidators: true })
+        // Send email to student
+        if (updatedPass) {
+            sendEmail(email, adminById.regNum, `Your Izoid Admin account password has been updated!`, password)
+        }
         res.status(200).json({ created: true, success: { message: "Admin successfully updated!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
