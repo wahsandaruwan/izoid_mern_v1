@@ -41,26 +41,31 @@ const Admins = () => {
     // Update states
     const firstNameState = (newVal) => {
         setError("")
+        setSuccess("")
         setFirstName(newVal)
     }
 
     const lastNameState = (newVal) => {
         setError("")
+        setSuccess("")
         setLastName(newVal)
     }
 
     const typeState = (newVal) => {
         setError("")
+        setSuccess("")
         setType(newVal)
     }
 
     const emailState = (newVal) => {
         setError("")
+        setSuccess("")
         setEmail(newVal)
     }
 
     const passwordState = (newVal) => {
         setError("")
+        setSuccess("")
         setPassword(newVal)
     }
 
@@ -80,7 +85,9 @@ const Admins = () => {
 
         // Clear error and success
         setError("")
-        setSuccess("")
+        setTimeout(() => {
+            setSuccess("")
+        }, 3000)
     }
 
     // Admin fetch handler
@@ -126,12 +133,7 @@ const Admins = () => {
                 adminsFetchHandler()
 
                 // Clear all
-                clearAll()
-
-                // Clear message
-                setTimeout(() => {
-                    setSuccess("")
-                }, 5000)
+                clearAll(e)
             }
             else {
                 if (data.authEx) {
@@ -156,6 +158,7 @@ const Admins = () => {
 
     // Get an admin by id handler
     const getAnAdminHandler = async (adminId) => {
+        // Api call
         try {
             const { data } = await axios.get(`http://localhost:3300/api/admins/${adminId}`, configCommon)
 
@@ -170,6 +173,48 @@ const Admins = () => {
                 setLastName(data.lastName)
                 setType(data.type)
                 setEmail(data.email)
+            }
+        } catch (err) {
+            setSuccess("")
+            setError(err.message)
+        }
+    }
+
+    // Update an admin handler
+    const updateAnAdminHandler = async (e) => {
+        e.preventDefault()
+
+        // Api call
+        try {
+            const { data } = await axios.put(`http://localhost:3300/api/admins/${adminId}`, {
+                firstName: firstName,
+                lastName: lastName,
+                type: type,
+                email: email,
+                password: password
+            }, configPost)
+
+            if (data.created) {
+                setError("")
+                setSuccess(data.success.message)
+                adminsFetchHandler()
+
+                // Clear all
+                clearAll(e)
+            }
+            else {
+                if (data.authEx) {
+                    setSuccess("")
+                    setError(data.errors.message)
+                    setTimeout(() => {
+                        // Clear local storage and navigate to login page
+                        localStorage.clear()
+                        history.push("/")
+                    }, 5000)
+                }
+                else {
+                    throw Error(data.errors.message)
+                }
             }
         } catch (err) {
             setSuccess("")
@@ -193,7 +238,7 @@ const Admins = () => {
                             </select>
                             <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
                             <InputBox placeText="Password" defaultValue={password} type="password" inputState={passwordState} />
-                            <SubmitBtn clickFunc={createAdminHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
+                            <SubmitBtn clickFunc={!adminId ? createAdminHandler : updateAnAdminHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
                                 <div className="msg err">{error}</div>
