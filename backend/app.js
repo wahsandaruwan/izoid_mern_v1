@@ -9,6 +9,7 @@ const teacherRoutes = require("./routes/teacherRoutes")
 const subjectRoutes = require("./routes/subjectRoutes")
 const gradeRoutes = require("./routes/gradeRoutes")
 const groupRoutes = require("./routes/groupRoutes")
+const combinationRoutes = require("./routes/combinationRoutes")
 
 // Common middleware
 app.use(cors());
@@ -36,6 +37,9 @@ app.use('/api/grades', gradeRoutes)
 
 // Group routes middleware
 app.use('/api/groups', groupRoutes)
+
+// Combination routes middleware
+app.use('/api/combinations', combinationRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {
