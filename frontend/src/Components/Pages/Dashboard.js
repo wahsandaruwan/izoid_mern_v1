@@ -32,7 +32,6 @@ const Dashboard = () => {
         <>
             <section className="dash-sec">
                 <NavBar displaySec={updateDisplayState} activeSec={display} />
-                {/* <h1 className="welcome-msg">Welcome to Izoid Center Protal!</h1> */}
                 {display === "combinations" && <Combinations />}
                 {display === "students" && <Students />}
                 {display === "teachers" && <Teachers />}
