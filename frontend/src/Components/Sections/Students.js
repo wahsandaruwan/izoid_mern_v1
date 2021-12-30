@@ -226,7 +226,7 @@ const Students = () => {
         }
     }
 
-    // Update an student handler
+    // Update a student handler
     const studentUpdateHandler = async (e) => {
         e.preventDefault()
 
@@ -273,7 +273,7 @@ const Students = () => {
         }
     }
 
-    // Delete an student handler
+    // Delete a student handler
     const studentDeleteHandler = async (e, studentId) => {
         e.preventDefault()
 
@@ -304,7 +304,7 @@ const Students = () => {
         }
     }
 
-    // Search an student handler by a query
+    // Search a student by a query handler
     const studentSearchHandler = async (query) => {
         if (query) {
             try {

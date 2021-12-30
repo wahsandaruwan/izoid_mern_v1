@@ -214,7 +214,7 @@ const Groups = () => {
         }
     }
 
-    // Search a group handler by a query
+    // Search a group by a query handler
     const groupSearchHandler = async (query) => {
         if (query) {
             try {

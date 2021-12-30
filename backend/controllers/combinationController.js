@@ -1,8 +1,19 @@
 const Combination = require("../models/combinationModel")
+const { validateRegNum } = require("../helpers/dataValidation");
 
 // Combination create
 exports.combinationCreate = async (req, res) => {
     const { grade, subject, group, teacherReg, studentReg } = req.body
+
+    // Check teacher's reg num is valid
+    if (!await validateRegNum(teacherReg, "Teacher")) {
+        return res.json({ errors: { message: "Teacher's registration code is invalid!" } })
+    }
+
+    // Check student's reg num is valid
+    if (!await validateRegNum(studentReg, "Student")) {
+        return res.json({ errors: { message: "Student's registration code is invalid!" } })
+    }
 
     // Check current row already exist exist
     const currentRow = await Combination.find({ $and: [{ grade }, { subject }, { group }, { teacherReg }, { studentReg }] })
@@ -54,10 +65,21 @@ exports.updateCombination = async (req, res) => {
     const { id } = req.params
     const { grade, subject, group, teacherReg, studentReg } = req.body
 
+    // Check teacher's reg num is valid
+    if (!await validateRegNum(teacherReg, "Teacher")) {
+        return res.json({ errors: { message: "Teacher's registration code is invalid!" } })
+    }
+
+    // Check student's reg num is valid
+    if (!await validateRegNum(studentReg, "Student")) {
+        return res.json({ errors: { message: "Student's registration code is invalid!" } })
+    }
+
     // Check current row already exist exist
-    const currentRow = await Admin.find({ $and: [{ grade }, { subject }, { group }, { teacherReg }, { studentReg }] })
-    if (currentRow) {
-        if (currentRow.id !== id) {
+    const currentRow = await Combination.find({ $and: [{ grade }, { subject }, { group }, { teacherReg }, { studentReg }] })
+    console.log(currentRow)
+    if (currentRow.length > 0) {
+        if (currentRow[0].id !== id) {
             return res.json({ errors: { message: "This combination already exist!" } })
         }
     }

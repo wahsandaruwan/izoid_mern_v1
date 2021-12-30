@@ -214,7 +214,7 @@ const Subjects = () => {
         }
     }
 
-    // Search a subject handler by a query
+    // Search a subject by a query handler
     const subjectSearchHandler = async (query) => {
         if (query) {
             try {

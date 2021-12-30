@@ -34,7 +34,7 @@ const NavBar = ({ displaySec, activeSec }) => {
                     <h2>Izoid <br></br>Center</h2>
                 </div>
                 <ul className="menu">
-                    <li><a className={`${activeSec === "classes" ? "active" : ""}`} onClick={(e) => displaySec("classes")}>Manage Classes</a></li>
+                    <li><a className={`${activeSec === "combinations" ? "active" : ""}`} onClick={(e) => displaySec("combinations")}>Manage Combinations</a></li>
                     <li><a className={`${activeSec === "students" ? "active" : ""}`} onClick={(e) => displaySec("students")}>Manage Students</a></li>
                     <li><a className={`${activeSec === "teachers" ? "active" : ""}`} onClick={(e) => displaySec("teachers")}>Manage Teachers</a></li>
                     <li><a className={`${activeSec === "subjects" ? "active" : ""}`} onClick={(e) => displaySec("subjects")}>Manage Subjects</a></li>

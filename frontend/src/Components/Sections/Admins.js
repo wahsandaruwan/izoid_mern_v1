@@ -257,7 +257,7 @@ const Admins = () => {
         }
     }
 
-    // Search an admin handler by a query
+    // Search an admin by a query handler
     const adminSearchHandler = async (query) => {
         if (query) {
             try {
@@ -284,11 +284,14 @@ const Admins = () => {
                         <form>
                             <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
                             <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
-                            <select id="drop-down" value={type} className="frm-drop" onChange={(e) => typeState(e.target.value)}>
-                                <option value=""></option>
-                                <option value="Manager">Manager</option>
-                                <option value="Owner">Owner</option>
-                            </select>
+                            <div className="select-box">
+                                <label className="drop-text" htmlFor="drop-down1">Admin Type</label>
+                                <select id="drop-down1" value={type} className="frm-drop" onChange={(e) => typeState(e.target.value)}>
+                                    <option value=""></option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Owner">Owner</option>
+                                </select>
+                            </div>
                             <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
                             <InputBox placeText={!adminId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
                             <SubmitBtn clickFunc={!adminId ? adminCreateHandler : adminUpdateHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />

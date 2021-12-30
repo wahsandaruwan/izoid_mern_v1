@@ -1,3 +1,5 @@
+const axios = require("axios")
+
 // Custom email validation
 exports.validateEmail = (email) => {
   const regEx = /^[a-zA-Z\d_-]+@[a-zA-Z\d_-]+\.[a-zA-Z\d\.]{2,}$/
@@ -14,4 +16,26 @@ exports.validateName = (name) => {
 exports.validatePhone = (phone) => {
   const regEx = /^[0-9]{10}$/
   return regEx.test(phone)
+}
+
+// Custom reg num validation
+exports.validateRegNum = async (regNum, type) => {
+  if (type === "Teacher") {
+    const { data } = await axios.get(`http://localhost:3300/api/teachers/reg/${regNum}`, {
+      headers: {
+        "Content-tpe": "application/json"
+      }
+    })
+
+    return data
+  }
+  else if (type === "Student") {
+    const { data } = await axios.get(`http://localhost:3300/api/students/reg/${regNum}`, {
+      headers: {
+        "Content-tpe": "application/json"
+      }
+    })
+
+    return data
+  }
 }

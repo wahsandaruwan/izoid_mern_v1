@@ -53,11 +53,13 @@ a {
   padding: 10px;
 }
 
-.date {
+.date,
+.select-box {
   position: relative;
 }
 
-.date .date-text {
+.date .date-text,
+.select-box .drop-text {
   position: absolute;
   top: 20%;
   right: 40px;

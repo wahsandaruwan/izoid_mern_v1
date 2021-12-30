@@ -139,3 +139,20 @@ exports.getTeachersBySearch = async (req, res) => {
         res.json({ errors: { message: err.message } })
     }
 }
+
+// Get a teacher by reg num | Only for backend
+exports.getTeacherByRegNum = async (req, res) => {
+    const { regNum } = req.params
+
+    try {
+        const teacher = await Teacher.findOne({ regNum })
+        if (teacher) {
+            res.send(true)
+        }
+        else {
+            res.send(false)
+        }
+    } catch (err) {
+        res.send(err.message)
+    }
+}

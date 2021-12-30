@@ -214,7 +214,7 @@ const Grades = () => {
         }
     }
 
-    // Search a grade handler by a query
+    // Search a grade by a query handler
     const gradeSearchHandler = async (query) => {
         if (query) {
             try {

@@ -182,7 +182,7 @@ const Teachers = () => {
         }
     }
 
-    // Update an teacher handler
+    // Update a teacher handler
     const teacherUpdateHandler = async (e) => {
         e.preventDefault()
 
@@ -225,7 +225,7 @@ const Teachers = () => {
         }
     }
 
-    // Delete an teacher handler
+    // Delete a teacher handler
     const teacherDeleteHandler = async (e, teacherId) => {
         e.preventDefault()
 
@@ -256,7 +256,7 @@ const Teachers = () => {
         }
     }
 
-    // Search an teacher handler by a query
+    // Search a teacher by a query handler
     const teacherSearchHandler = async (query) => {
         if (query) {
             try {

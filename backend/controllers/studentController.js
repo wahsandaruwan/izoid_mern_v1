@@ -143,3 +143,20 @@ exports.getStudentsBySearch = async (req, res) => {
         res.json({ errors: { message: err.message } })
     }
 }
+
+// Get a student by reg num | Only for backend
+exports.getStudentByRegNum = async (req, res) => {
+    const { regNum } = req.params
+
+    try {
+        const student = await Student.findOne({ regNum })
+        if (student) {
+            res.send(true)
+        }
+        else {
+            res.send(false)
+        }
+    } catch (err) {
+        res.send(err.message)
+    }
+}

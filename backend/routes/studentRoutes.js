@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { studentRegistration, getAllStudents, getStudentById, updateStudent, deleteStudent, getStudentsBySearch } = require("../controllers/studentController")
+const { studentRegistration, getAllStudents, getStudentById, updateStudent, deleteStudent, getStudentsBySearch, getStudentByRegNum } = require("../controllers/studentController")
 const { authUser } = require("../middleware/auth")
 
 // Student registration route
@@ -20,5 +20,8 @@ router.delete("/:id", authUser, deleteStudent)
 
 // Get students by search query
 router.get("/search/:searchQuery", authUser, getStudentsBySearch)
+
+// Get student by reg. num | Only for backend
+router.get("/reg/:regNum", getStudentByRegNum)
 
 module.exports = router
