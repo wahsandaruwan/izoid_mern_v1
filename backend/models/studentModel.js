@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { validateEmail, validateName, validatePhone } = require("../helpers/dataValidation");
 
-// Create user schema
+// Create student schema
 const studentSchema = new mongoose.Schema({
     regNum: {
         type: String,

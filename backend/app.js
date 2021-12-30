@@ -6,6 +6,7 @@ require("./helpers/dbCon")
 const adminRoutes = require("./routes/adminRoutes")
 const studentRoutes = require("./routes/studentRoutes")
 const teacherRoutes = require("./routes/teacherRoutes")
+const subjectRoutes = require("./routes/subjectRoutes")
 
 // Common middleware
 app.use(cors());
@@ -24,6 +25,9 @@ app.use('/api/students', studentRoutes)
 
 // Teacher routes middleware
 app.use('/api/teachers', teacherRoutes)
+
+// Subject routes middleware
+app.use('/api/subjects', subjectRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {

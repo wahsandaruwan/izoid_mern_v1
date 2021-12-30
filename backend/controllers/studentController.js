@@ -2,7 +2,7 @@ const Student = require("../models/studentModel")
 const bcrypt = require("bcrypt")
 const { randomReg } = require("../helpers/randomGen")
 
-// Admin registration
+// Student registration
 exports.studentRegistration = async (req, res) => {
     const { firstName, lastName, dateOfBirth, homeAddress, schoolName, parentsName, parentsPhone, email, password } = req.body
     let newPass = "";
@@ -68,7 +68,7 @@ exports.getAllStudents = async (req, res) => {
     }
 }
 
-// Get an student by id
+// Get a student by id
 exports.getStudentById = async (req, res) => {
     const { id } = req.params
 
@@ -80,7 +80,7 @@ exports.getStudentById = async (req, res) => {
     }
 }
 
-// Update an student
+// Update a student
 exports.updateStudent = async (req, res) => {
     const { id } = req.params
     const { email, password } = req.body
@@ -119,7 +119,7 @@ exports.updateStudent = async (req, res) => {
     }
 }
 
-// Delete an student
+// Delete a student
 exports.deleteStudent = async (req, res) => {
     const { id } = req.params
 
