@@ -1,5 +1,4 @@
 const Subject = require("../models/subjectModel")
-const bcrypt = require("bcrypt")
 
 // Subject create
 exports.subjectCreate = async (req, res) => {

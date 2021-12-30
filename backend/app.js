@@ -7,6 +7,7 @@ const adminRoutes = require("./routes/adminRoutes")
 const studentRoutes = require("./routes/studentRoutes")
 const teacherRoutes = require("./routes/teacherRoutes")
 const subjectRoutes = require("./routes/subjectRoutes")
+const gradeRoutes = require("./routes/gradeRoutes")
 
 // Common middleware
 app.use(cors());
@@ -28,6 +29,9 @@ app.use('/api/teachers', teacherRoutes)
 
 // Subject routes middleware
 app.use('/api/subjects', subjectRoutes)
+
+// Grade routes middleware
+app.use('/api/grades', gradeRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {

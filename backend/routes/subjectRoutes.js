@@ -9,13 +9,13 @@ router.post("/create", authUser, subjectCreate)
 // Get all subjects route
 router.get("/", authUser, getAllSubjects)
 
-// Get an subject by id route
+// Get a subject by id route
 router.get("/:id", authUser, getSubjectById)
 
-// Update an subject route
+// Update a subject route
 router.put("/:id", authUser, updateSubject)
 
-// Delete an subject route
+// Delete a subject route
 router.delete("/:id", authUser, deleteSubject)
 
 // Get subjects by search query
