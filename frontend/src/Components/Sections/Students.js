@@ -14,7 +14,7 @@ const Students = () => {
     const [studentId, setStudentId] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
-    const [dob, setDob] = useState(new Date().toISOString().split("T")[0])
+    const [dob, setDob] = useState("")
     const [homeAddress, setHomeAddress] = useState("")
     const [schoolName, setSchoolName] = useState("")
     const [parentsName, setParentsName] = useState("")

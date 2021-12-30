@@ -1,6 +1,6 @@
 const Student = require("../models/studentModel")
 const bcrypt = require("bcrypt")
-const { randomReg, randomJWT } = require("../helpers/randomGen")
+const { randomReg } = require("../helpers/randomGen")
 
 // Admin registration
 exports.studentRegistration = async (req, res) => {
@@ -35,7 +35,7 @@ exports.studentRegistration = async (req, res) => {
         newPass = hashedPass
     }
 
-    // Create a new admin
+    // Create a new student
     const newStudent = new Student({
         regNum: regNum,
         firstName: firstName,
@@ -58,7 +58,7 @@ exports.studentRegistration = async (req, res) => {
     }
 }
 
-// Get all admins
+// Get all students
 exports.getAllStudents = async (req, res) => {
     try {
         const student = await Student.find()
@@ -68,7 +68,7 @@ exports.getAllStudents = async (req, res) => {
     }
 }
 
-// Get an admin by id
+// Get an student by id
 exports.getStudentById = async (req, res) => {
     const { id } = req.params
 
@@ -80,7 +80,7 @@ exports.getStudentById = async (req, res) => {
     }
 }
 
-// Update an admin
+// Update an student
 exports.updateStudent = async (req, res) => {
     const { id } = req.params
     const { email, password } = req.body
@@ -119,7 +119,7 @@ exports.updateStudent = async (req, res) => {
     }
 }
 
-// Delete an admin
+// Delete an student
 exports.deleteStudent = async (req, res) => {
     const { id } = req.params
 
@@ -131,7 +131,7 @@ exports.deleteStudent = async (req, res) => {
     }
 }
 
-// Get admins by search query
+// Get students by search query
 exports.getStudentsBySearch = async (req, res) => {
     const { searchQuery } = req.params
 
