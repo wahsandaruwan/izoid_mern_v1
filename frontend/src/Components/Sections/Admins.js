@@ -151,7 +151,6 @@ const Admins = () => {
                 }
             }
         } catch (err) {
-            console.log(err)
             setSuccess("")
             setError(err.message)
         }
@@ -274,7 +273,7 @@ const Admins = () => {
     return (
         <>
             <div className="search-sec">
-                <InputBox placeText="Search..." inputState={adminSearchHandler} />
+                <InputBox placeText="Search Admins..." inputState={adminSearchHandler} />
             </div>
             <div className="data-content">
                 <div>

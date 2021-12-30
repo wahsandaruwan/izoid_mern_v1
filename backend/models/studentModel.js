@@ -26,7 +26,7 @@ const studentSchema = new mongoose.Schema({
         required: [true, "Enter an user type!"]
     },
     dateOfBirth: {
-        type: Date,
+        type: String,
         required: [true, "Enter date of birth!"],
     },
     homeAddress: {
@@ -50,7 +50,7 @@ const studentSchema = new mongoose.Schema({
         validate: [validateName, "Enter parent's name only using letters!"],
     },
     parentsPhone: {
-        type: Number,
+        type: String,
         required: [true, "Enter parent's phone number!"],
         validate: [validatePhone, "Enter 10 digit phone number!"],
     },

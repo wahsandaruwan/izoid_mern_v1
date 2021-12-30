@@ -23,8 +23,11 @@ a {
   transition: all 0.3s ease-in;
 }
 
-/* -----Input box----- */
-.inp-box {
+/* -----Input elements----- */
+.inp-box,
+.frm-drop,
+.textarea-box,
+.date-picker {
   width: 100%;
   color: #032e27;
   padding: 10px 15px;
@@ -35,20 +38,33 @@ a {
   outline: none;
 }
 
-.inp-box::placeholder {
+.textarea-box {
+  height: 150px;
+  resize: vertical;
+}
+
+.inp-box::placeholder,
+.textarea-box::placeholder {
   font-size: 0.9rem;
   color: #065c4d;
 }
 
-/* -----Dropdown----- */
 .frm-drop {
-  width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  border: 2px #03b496 solid;
-  outline: none;
+}
+
+.date {
+  position: relative;
+}
+
+.date .date-text {
+  position: absolute;
+  top: 20%;
+  right: 40px;
+  z-index: 11;
+  font-size: 0.9rem;
+  color: #7e7474;
+  margin-left: 15px;
 }
 
 /* -----Submit button----- */
@@ -293,12 +309,20 @@ th {
 
 .data-form {
   max-width: 470px;
+  max-height: 650px;
+  overflow: hidden;
   width: 100%;
   background-color: #fff;
   text-align: center;
   padding: 25px 30px;
   border-radius: 20px;
   margin: 0 10px;
+}
+
+.data-form form .inputs {
+  max-height: 400px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
 }
 
 .data-form h2 {
@@ -328,7 +352,7 @@ th {
 .data-table {
   max-width: 800px;
   width: 100%;
-  max-height: 550px;
+  max-height: 650px;
   overflow: hidden;
   background-color: #fff;
   padding: 10px;
@@ -337,7 +361,7 @@ th {
 
 .data-table > div {
   padding: 10px;
-  max-height: 500px;
+  max-height: 550px;
   overflow: scroll;
 }
 
