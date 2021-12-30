@@ -6,7 +6,7 @@ import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
 
 const Subjects = () => {
-    // Admin data states
+    // Subject data states
     const [subjects, setSubjects] = useState("")
     const [subjectId, setSubjectId] = useState("")
     const [name, setName] = useState("")
@@ -60,7 +60,7 @@ const Subjects = () => {
         subjectsFetchHandler()
     }
 
-    // Subject fetch handler
+    // Subjects fetch handler
     const subjectsFetchHandler = async () => {
         try {
             const { data } = await axios.get(`http://localhost:3300/api/subjects/`, configCommon)

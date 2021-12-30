@@ -1,4 +1,4 @@
-const Grade = require("../models/subjectModel")
+const Grade = require("../models/gradeModel")
 
 // Grade create
 exports.gradeCreate = async (req, res) => {
