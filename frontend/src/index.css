@@ -286,12 +286,34 @@ th {
   margin-bottom: 15px;
 }
 
+.data-form .clear-btn {
+  width: 100%;
+  display: block;
+  background-color: #0c7c37;
+  color: #fff;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 15px;
+  border: 2px #0c7c37 solid;
+}
+
+.data-form .clear-btn:hover {
+  background-color: #fff;
+  color: #0c7c37;
+}
+
 .data-table {
   max-width: 700px;
   width: 100%;
+  max-height: 550px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 10px;
+  margin: 0 10px;
+}
+
+.data-table > div {
+  padding: 10px;
   max-height: 500px;
   overflow: scroll;
-  background-color: #fff;
-  padding: 20px;
-  margin: 0 10px;
 }
