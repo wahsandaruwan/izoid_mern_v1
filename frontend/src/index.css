@@ -76,6 +76,15 @@ a {
   color: #03b496;
 }
 
+/* -----Search box----- */
+.search-sec {
+  max-width: 450px;
+  width: 100%;
+  position: fixed;
+  top: 40px;
+  right: 40px;
+}
+
 /* -----Messages----- */
 .msg {
   width: 100%;

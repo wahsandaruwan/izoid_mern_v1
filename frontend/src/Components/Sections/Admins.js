@@ -256,9 +256,27 @@ const Admins = () => {
         }
     }
 
+    // Search an admin handler by a query
+    const adminSearchHandler = async (query) => {
+        if (query) {
+            try {
+                const { data } = await axios.get(`http://localhost:3300/api/admins/search/${query}`, configCommon)
+                setAdmins(data)
+            } catch (err) {
+                alert(err.message)
+            }
+        }
+        else {
+            adminsFetchHandler()
+        }
+    }
+
     return (
         <>
             <section className="main-sec">
+                <div className="search-sec">
+                    <InputBox placeText="Search..." inputState={adminSearchHandler} />
+                </div>
                 <div className="data-content">
                     <div className="data-form">
                         <h2>Manage Admins</h2>
@@ -271,7 +289,7 @@ const Admins = () => {
                                 <option value="Owner">Owner</option>
                             </select>
                             <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
-                            <InputBox placeText="Password" defaultValue={password} type="password" inputState={passwordState} />
+                            <InputBox placeText={!adminId ? "Password" : "Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
                             <SubmitBtn clickFunc={!adminId ? adminCreateHandler : adminUpdateHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
