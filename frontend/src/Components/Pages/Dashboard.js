@@ -30,8 +30,8 @@ const Dashboard = () => {
 
     return (
         <>
-            <NavBar displaySec={updateDisplayState} activeSec={display} />
-            <section className="main-sec">
+            <section className="dash-sec">
+                <NavBar displaySec={updateDisplayState} activeSec={display} />
                 {/* <h1 className="welcome-msg">Welcome to Izoid Center Protal!</h1> */}
                 {display === "classes" && <Classes />}
                 {display === "students" && <Students />}

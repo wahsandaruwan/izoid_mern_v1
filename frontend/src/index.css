@@ -13,7 +13,6 @@ body {
   background-color: #03b496;
   width: 100%;
   min-height: 100vh;
-  padding: 15px 25px;
 }
 
 a {
@@ -22,15 +21,6 @@ a {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease-in;
-}
-
-/* -----Section----- */
-.main-sec {
-  min-height: 90vh;
-  background-color: #03b496;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* -----Input box----- */
@@ -106,11 +96,7 @@ a {
 
 /* -----Navigation menu----- */
 .nav-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  max-width: 250px;
-  width: 100%;
+  min-width: 250px;
   height: 100%;
   background-color: #fff;
 }
@@ -132,6 +118,10 @@ a {
   padding: 25px 20px;
   border-radius: 50%;
   border: 2px #fff solid;
+}
+
+.nav-menu .menu {
+  list-style: none;
 }
 
 .nav-menu .menu li {
@@ -233,6 +223,14 @@ th {
 }
 
 /* --------Home page-------- */
+.home-sec {
+  min-height: 90vh;
+  background-color: #03b496;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .home-content {
   max-width: 600px;
   width: 100%;
@@ -273,11 +271,26 @@ th {
 }
 
 /* --------Dashboard page-------- */
+.dash-sec {
+  min-height: 100vh;
+  background-color: #03b496;
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+}
+
 .data-content {
+  background-color: #03b496;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.data-content > div {
+  padding: 15px;
+  display: flex;
   align-items: flex-start;
 }
+
 .data-form {
   max-width: 470px;
   width: 100%;
@@ -326,4 +339,16 @@ th {
   padding: 10px;
   max-height: 500px;
   overflow: scroll;
+}
+
+@media (max-width: 1250px) {
+  .data-content > div {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .data-form {
+    max-width: 800px;
+    margin-bottom: 10px;
+  }
 }

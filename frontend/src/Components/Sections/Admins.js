@@ -273,11 +273,11 @@ const Admins = () => {
 
     return (
         <>
-            <section className="main-sec">
-                <div className="search-sec">
-                    <InputBox placeText="Search..." inputState={adminSearchHandler} />
-                </div>
-                <div className="data-content">
+            <div className="search-sec">
+                <InputBox placeText="Search..." inputState={adminSearchHandler} />
+            </div>
+            <div className="data-content">
+                <div>
                     <div className="data-form">
                         <h2>Manage Admins</h2>
                         <form>
@@ -343,7 +343,7 @@ const Admins = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </>
     )
 }

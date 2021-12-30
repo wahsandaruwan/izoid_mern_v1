@@ -75,7 +75,7 @@ const Home = () => {
 
     return (
         <>
-            <section className="main-sec">
+            <section className="home-sec">
                 <div className="home-content">
                     <div className="logo">
                         <h2>Izoid <br></br>Center</h2>
