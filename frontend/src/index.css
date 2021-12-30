@@ -161,7 +161,7 @@ a {
 
 .active {
   background-color: #03b496;
-  color: #fff;
+  color: #fff !important;
 }
 
 .nav-menu .user {

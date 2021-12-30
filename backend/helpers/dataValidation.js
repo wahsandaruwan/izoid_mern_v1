@@ -12,6 +12,6 @@ exports.validateName = (name) => {
 
 // Custom phone validation
 exports.validatePhone = (phone) => {
-  const regEx = /^[\d]{10}$/
+  const regEx = /^[0-9]{10}$/
   return regEx.test(phone)
 }

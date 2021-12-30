@@ -12,14 +12,14 @@ const studentSchema = new mongoose.Schema({
         required: [true, "Enter a first name!"],
         minlength: [2, "Minimum length of first name would be 2 characters!"],
         maxlength: [50, "Maximum length of first name would be 50 characters!"],
-        validate: [validateName, "Enter first name only using letters!"],
+        validate: [validateName, "Enter first name only using letters!"]
     },
     lastName: {
         type: String,
         required: [true, "Enter a last name!"],
         minlength: [2, "Minimum length of last name would be 2 characters!"],
         maxlength: [50, "Maximum length of last name would be 50 characters!"],
-        validate: [validateName, "Enter last name only using letters!"],
+        validate: [validateName, "Enter last name only using letters!"]
     },
     type: {
         type: String,
@@ -27,7 +27,7 @@ const studentSchema = new mongoose.Schema({
     },
     dateOfBirth: {
         type: String,
-        required: [true, "Enter date of birth!"],
+        required: [true, "Enter date of birth!"]
     },
     homeAddress: {
         type: String,
@@ -47,24 +47,24 @@ const studentSchema = new mongoose.Schema({
         required: [true, "Enter parent's name!"],
         minlength: [2, "Minimum length of parent's name would be 2 characters!"],
         maxlength: [50, "Maximum length of parent's name would be 50 characters!"],
-        validate: [validateName, "Enter parent's name only using letters!"],
+        validate: [validateName, "Enter parent's name only using letters!"]
     },
     parentsPhone: {
         type: String,
         required: [true, "Enter parent's phone number!"],
-        validate: [validatePhone, "Enter 10 digit phone number!"],
+        validate: [validatePhone, "Enter 10 digit phone number!"]
     },
     email: {
         type: String,
         required: [true, "Enter an email!"],
         unique: [true, "Enter an unique email!"],
         lowercase: [true, "Enter email in lower case!"],
-        validate: [validateEmail, "Enter a proper email!"],
+        validate: [validateEmail, "Enter a proper email!"]
     },
     password: {
         type: String,
         required: [true, "Enter a password!"],
-        minlength: [6, "Minimum length of password would be 6 characters!"],
+        minlength: [6, "Minimum length of password would be 6 characters!"]
     }
 })
 

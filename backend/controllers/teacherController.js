@@ -4,7 +4,7 @@ const { randomReg } = require("../helpers/randomGen")
 
 // Admin registration
 exports.teacherRegistration = async (req, res) => {
-    const { firstName, lastName, type, email, password } = req.body
+    const { firstName, lastName, phone, email, password } = req.body
     let newPass = "";
 
     // Generate random reg number
@@ -40,7 +40,8 @@ exports.teacherRegistration = async (req, res) => {
         regNum: regNum,
         firstName: firstName,
         lastName: lastName,
-        type: type,
+        type: "Teacher",
+        phone: phone,
         email: email,
         password: newPass
     })
@@ -132,7 +133,7 @@ exports.getTeachersBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const teachers = await Admin.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }] })
+        const teachers = await Teacher.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { phone: regexQuery }, { email: regexQuery }] })
         res.status(200).json(teachers)
     } catch (err) {
         res.json({ errors: { message: err.message } })

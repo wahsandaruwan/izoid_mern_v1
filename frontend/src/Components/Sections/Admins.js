@@ -88,6 +88,8 @@ const Admins = () => {
         setTimeout(() => {
             setSuccess("")
         }, 3000)
+
+        adminsFetchHandler()
     }
 
     // Admin fetch handler

@@ -9,7 +9,7 @@ import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
 
 const Students = () => {
-    // Admin data states
+    // Student data states
     const [students, setStudents] = useState("")
     const [studentId, setStudentId] = useState("")
     const [firstName, setFirstName] = useState("")
@@ -123,6 +123,8 @@ const Students = () => {
         setTimeout(() => {
             setSuccess("")
         }, 3000)
+
+        studentsFetchHandler()
     }
 
     // Student fetch handler
