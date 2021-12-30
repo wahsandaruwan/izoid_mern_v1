@@ -87,7 +87,7 @@ const Home = () => {
                             <InputBox placeText="Registration Code" type="text" inputState={regNumState} />
                             <InputBox placeText="Password" type="password" inputState={passwordState} />
                             <SubmitBtn text="Login" clickFunc={loginHandler} />
-                            {error && <div className="err-msg">{error}</div>}
+                            {error && <div className="msg err">{error}</div>}
                         </form>
                     </div>
                 </div>

@@ -15,5 +15,5 @@ exports.randomJWT = (user) => {
         id: user._id,
         regNum: user.regNum,
         email: user.email
-    }, process.env.SECRET_KEY, { expiresIn: '1m' })
+    }, process.env.SECRET_KEY, { expiresIn: '10h' })
 }

@@ -35,6 +35,7 @@ a {
 /* -----Input box----- */
 .inp-box {
   width: 100%;
+  color: #032e27;
   padding: 10px 15px;
   margin-bottom: 15px;
   border-radius: 15px;
@@ -46,6 +47,17 @@ a {
 .inp-box::placeholder {
   font-size: 0.9rem;
   color: #065c4d;
+}
+
+/* -----Dropdown----- */
+.frm-drop {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  border: 2px #03b496 solid;
+  outline: none;
 }
 
 /* -----Submit button----- */
@@ -64,15 +76,22 @@ a {
   color: #03b496;
 }
 
-/* -----Error message----- */
-.err-msg {
+/* -----Messages----- */
+.msg {
   width: 100%;
   margin-top: 10px;
   font-size: 0.8rem;
   padding: 10px;
   border-radius: 15px;
-  background-color: #aa2412;
   color: #fff;
+}
+
+.err {
+  background-color: #aa2412;
+}
+
+.success {
+  background-color: #0c7c37;
 }
 
 /* -----Navigation menu----- */

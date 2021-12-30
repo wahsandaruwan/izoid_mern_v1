@@ -4,7 +4,9 @@ const { randomReg, randomJWT } = require("../helpers/randomGen")
 
 // Admin registration
 exports.adminRegistration = async (req, res) => {
-    const { firstName, lastName, type, email, password } = req.body;
+    const { firstName, lastName, type, email, password } = req.body
+    let newPass = "";
+
     // Generate random reg number
     const regNum = randomReg(type)
 
@@ -15,7 +17,7 @@ exports.adminRegistration = async (req, res) => {
             return res.json({ errors: { message: "Email already exist!" } })
         }
         else if (admin[0].regNum === regNum) {
-            return res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
+            return res.json({ errors: { message: "Something went wrong try again!" } })
         }
     }
 
@@ -23,7 +25,15 @@ exports.adminRegistration = async (req, res) => {
     const hashedPass = await bcrypt.hash(password, 8)
 
     // Set hashed password
-    const newPass = password.length >= 6 ? hashedPass : false
+    if (password.length < 6 && password.length > 0) {
+        newPass = false
+    }
+    else if (password.length === 0) {
+        newPass = ""
+    }
+    else {
+        newPass = hashedPass
+    }
 
     // Create a new admin
     const newAdmin = new Admin({
