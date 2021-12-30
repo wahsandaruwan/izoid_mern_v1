@@ -127,7 +127,7 @@ const Students = () => {
         studentsFetchHandler()
     }
 
-    // Student fetch handler
+    // Students fetch handler
     const studentsFetchHandler = async () => {
         try {
             const { data } = await axios.get(`http://localhost:3300/api/students/`, configCommon)
@@ -197,7 +197,7 @@ const Students = () => {
         }
     }
 
-    // Get an student by id handler
+    // Get a student by id handler
     const oneStudentFetchHandler = async (studentId) => {
         // Api call
         try {

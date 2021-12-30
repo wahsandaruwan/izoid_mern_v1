@@ -92,7 +92,7 @@ const Teachers = () => {
         teachersFetchHandler()
     }
 
-    // Teacher fetch handler
+    // Teachers fetch handler
     const teachersFetchHandler = async () => {
         try {
             const { data } = await axios.get(`http://localhost:3300/api/teachers/`, configCommon)
@@ -158,7 +158,7 @@ const Teachers = () => {
         }
     }
 
-    // Get an teacher by id handler
+    // Get a teacher by id handler
     const oneTeacherFetchHandler = async (adminId) => {
         // Api call
         try {
@@ -274,7 +274,7 @@ const Teachers = () => {
     return (
         <>
             <div className="search-sec">
-                <InputBox placeText="Search Admins..." inputState={teacherSearchHandler} />
+                <InputBox placeText="Search Teachers..." inputState={teacherSearchHandler} />
             </div>
             <div className="data-content">
                 <div>
