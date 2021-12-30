@@ -289,7 +289,7 @@ const Admins = () => {
                                 <option value="Owner">Owner</option>
                             </select>
                             <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
-                            <InputBox placeText={!adminId ? "Password" : "Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
+                            <InputBox placeText={!adminId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
                             <SubmitBtn clickFunc={!adminId ? adminCreateHandler : adminUpdateHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
