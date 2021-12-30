@@ -114,7 +114,7 @@ const Admins = () => {
     }, [])
 
     // Create admin handler
-    const createAdminHandler = async (e) => {
+    const adminCreateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
@@ -139,6 +139,7 @@ const Admins = () => {
                 if (data.authEx) {
                     setSuccess("")
                     setError(data.errors.message)
+
                     setTimeout(() => {
                         // Clear local storage
                         localStorage.clear()
@@ -157,13 +158,14 @@ const Admins = () => {
     }
 
     // Get an admin by id handler
-    const getAnAdminHandler = async (adminId) => {
+    const oneAdminFetchHandler = async (adminId) => {
         // Api call
         try {
             const { data } = await axios.get(`http://localhost:3300/api/admins/${adminId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
+
                 // Clear local storage
                 localStorage.clear()
                 history.push("/")
@@ -181,7 +183,7 @@ const Admins = () => {
     }
 
     // Update an admin handler
-    const updateAnAdminHandler = async (e) => {
+    const adminUpdateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
@@ -206,8 +208,9 @@ const Admins = () => {
                 if (data.authEx) {
                     setSuccess("")
                     setError(data.errors.message)
+
                     setTimeout(() => {
-                        // Clear local storage and navigate to login page
+                        // Clear local storage
                         localStorage.clear()
                         history.push("/")
                     }, 5000)
@@ -219,6 +222,37 @@ const Admins = () => {
         } catch (err) {
             setSuccess("")
             setError(err.message)
+        }
+    }
+
+    // Delete an admin handler
+    const adminDeleteHandler = async (e, adminId) => {
+        e.preventDefault()
+
+        if (window.confirm("Are you really want to delete this admin?")) {
+            // Api call
+            try {
+                const { data } = await axios.delete(`http://localhost:3300/api/admins/${adminId}`, configCommon)
+
+                if (data.created) {
+                    alert(data.success.message)
+                    adminsFetchHandler()
+                }
+                else {
+                    if (data.authEx) {
+                        alert(data.errors.message)
+
+                        // Clear local storage
+                        localStorage.clear()
+                        history.push("/")
+                    }
+                    else {
+                        throw Error(data.errors.message)
+                    }
+                }
+            } catch (err) {
+                alert(err.message)
+            }
         }
     }
 
@@ -238,7 +272,7 @@ const Admins = () => {
                             </select>
                             <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
                             <InputBox placeText="Password" defaultValue={password} type="password" inputState={passwordState} />
-                            <SubmitBtn clickFunc={!adminId ? createAdminHandler : updateAnAdminHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
+                            <SubmitBtn clickFunc={!adminId ? adminCreateHandler : adminUpdateHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
                                 <div className="msg err">{error}</div>
@@ -278,9 +312,9 @@ const Admins = () => {
                                                         <td>{email}</td>
                                                         <td className="td-btn td-edit"><a onClick={(e) => {
                                                             setAdminId(_id)
-                                                            getAnAdminHandler(_id)
+                                                            oneAdminFetchHandler(_id)
                                                         }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a>Delete</a></td>
+                                                        <td className="td-btn td-del"><a onClick={(e) => adminDeleteHandler(e, _id)}>Delete</a></td>
                                                     </tr>
                                                 )
                                             })
