@@ -144,7 +144,7 @@ exports.getStudentsBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const students = await Student.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { dateOfBirth: regexQuery }, { parentsName: regexQuery }, { parentsPhone: regexQuery }] })
+        const students = await Student.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { dateOfBirth: regexQuery }, { homeAddress: regexQuery }, { parentsName: regexQuery }, { parentsPhone: regexQuery }] })
         res.status(200).json(students)
     } catch (err) {
         res.json({ errors: { message: err.message } })
