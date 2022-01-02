@@ -389,9 +389,6 @@ const Combinations = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Combinations..." inputState={teacherSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -487,6 +484,9 @@ const Combinations = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Combinations..." inputState={teacherSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

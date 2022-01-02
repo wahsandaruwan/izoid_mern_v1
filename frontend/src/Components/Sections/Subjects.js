@@ -235,9 +235,6 @@ const Subjects = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Subjects..." inputState={subjectSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -256,6 +253,9 @@ const Subjects = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Subjects..." inputState={subjectSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

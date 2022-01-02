@@ -235,9 +235,6 @@ const Groups = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Groups..." inputState={groupSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -256,6 +253,9 @@ const Groups = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Groups..." inputState={groupSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

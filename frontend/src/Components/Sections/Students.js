@@ -324,9 +324,9 @@ const Students = () => {
 
     return (
         <>
-            <div className="search-sec">
+            {/* <div className="search-sec">
                 <InputBox placeText="Search Students..." inputState={studentSearchHandler} />
-            </div>
+            </div> */}
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -358,6 +358,9 @@ const Students = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Students..." inputState={studentSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

@@ -278,9 +278,6 @@ const Teachers = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Teachers..." inputState={teacherSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -303,6 +300,9 @@ const Teachers = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Teachers..." inputState={teacherSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

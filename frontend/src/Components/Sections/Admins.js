@@ -278,9 +278,6 @@ const Admins = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Admins..." inputState={adminSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -310,6 +307,9 @@ const Admins = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Admins..." inputState={adminSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>

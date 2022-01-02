@@ -235,9 +235,6 @@ const Grades = () => {
 
     return (
         <>
-            <div className="search-sec">
-                <InputBox placeText="Search Grades..." inputState={gradeSearchHandler} />
-            </div>
             <div className="data-content">
                 <div>
                     <div className="data-form">
@@ -256,6 +253,9 @@ const Grades = () => {
                     </div>
                     <div className="data-table">
                         <div>
+                            <div className="search-sec">
+                                <InputBox placeText="Search Grades..." inputState={gradeSearchHandler} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>
