@@ -7,7 +7,7 @@ import SubmitBtn from "../Elements/SubmitBtn"
 
 const Home = () => {
     // Login states
-    const [regNum, setRegNum] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
 
@@ -22,9 +22,9 @@ const Home = () => {
     const history = useHistory()
 
     // Update states
-    const regNumState = (newVal) => {
+    const emailState = (newVal) => {
         setError("")
-        setRegNum(newVal)
+        setEmail(newVal)
     }
 
     const passwordState = (newVal) => {
@@ -44,7 +44,7 @@ const Home = () => {
 
         // Api call
         try {
-            if (regNum === "") {
+            if (email === "") {
                 setError("Enter a registration code")
             }
             else if (password === "") {
@@ -52,7 +52,7 @@ const Home = () => {
             }
             else {
                 const { data } = await axios.post(`http://localhost:3300/api/admins/login`, {
-                    regNum: regNum,
+                    email: email,
                     password: password
                 }, configPost)
 
@@ -84,8 +84,8 @@ const Home = () => {
                     <div className="lg-frm">
                         <h2>Login</h2>
                         <form>
-                            <InputBox placeText="Registration Code" type="text" inputState={regNumState} />
-                            <InputBox placeText="Password" type="password" inputState={passwordState} />
+                            <InputBox placeText="Enter email address" type="text" inputState={emailState} />
+                            <InputBox placeText="Enter password" type="password" inputState={passwordState} />
                             <SubmitBtn text="Login" clickFunc={loginHandler} />
                             {error && <div className="msg err">{error}</div>}
                         </form>

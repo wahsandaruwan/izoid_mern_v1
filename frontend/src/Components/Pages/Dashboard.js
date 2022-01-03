@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom";
 
 import NavBar from "../Sections/NavBar";
-import Combinations from "../Sections/Combinations";
+import Classes from "../Sections/Classes";
 import Students from "../Sections/Students";
 import Teachers from "../Sections/Teachers";
 import Subjects from "../Sections/Subjects";
@@ -32,7 +32,7 @@ const Dashboard = () => {
         <>
             <section className="dash-sec">
                 <NavBar displaySec={updateDisplayState} activeSec={display} />
-                {display === "combinations" && <Combinations />}
+                {display === "combinations" && <Classes />}
                 {display === "students" && <Students />}
                 {display === "teachers" && <Teachers />}
                 {display === "subjects" && <Subjects />}

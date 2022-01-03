@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-// Create combination schema
-const combinationSchema = new mongoose.Schema({
+// Create class schema
+const classSchema = new mongoose.Schema({
     grade: {
         type: String,
         required: [true, "Enter a grade!"]
@@ -24,4 +24,4 @@ const combinationSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("Combination", combinationSchema)
+module.exports = mongoose.model("Class", classSchema)

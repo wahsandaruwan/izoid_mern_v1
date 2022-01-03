@@ -6,9 +6,9 @@ import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
 
 const Combinations = () => {
-    // Combination data states
-    const [combinations, setCombinations] = useState("")
-    const [combinationId, setCombinationId] = useState("")
+    // Class data states
+    const [classes, setClasses] = useState("")
+    const [classId, setClassId] = useState("")
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
     const [group, setGroup] = useState("")
@@ -100,7 +100,7 @@ const Combinations = () => {
         setStudentReg("")
 
         // Clear selected teacher id
-        setCombinationId("")
+        setClassId("")
 
         // Clear error and success
         setError("")
@@ -108,13 +108,13 @@ const Combinations = () => {
             setSuccess("")
         }, 3000)
 
-        combinationsFetchHandler()
+        classesFetchHandler()
     }
 
-    // Combinations fetch handler
-    const combinationsFetchHandler = async () => {
+    // Classes fetch handler
+    const classesFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/combinations/`, configCommon)
+            const { data } = await axios.get(`http://localhost:3300/api/classes/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -122,7 +122,7 @@ const Combinations = () => {
                 history.push("/")
             }
             else {
-                setCombinations(data)
+                setClasses(data)
             }
         } catch (err) {
             alert(err.message)
@@ -131,7 +131,7 @@ const Combinations = () => {
 
     // Handle fetching all data
     useEffect(() => {
-        combinationsFetchHandler()
+        classesFetchHandler()
         gradesFetchHandler()
         subjectsFetchHandler()
         groupsFetchHandler()
@@ -139,13 +139,13 @@ const Combinations = () => {
         studentsFetchHandler()
     }, [])
 
-    // Create combination handler
-    const combinationCreateHandler = async (e) => {
+    // Create class handler
+    const classCreateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/combinations/create`, {
+            const { data } = await axios.post(`http://localhost:3300/api/classes/create`, {
                 grade: grade,
                 subject: subject,
                 group: group,
@@ -156,7 +156,7 @@ const Combinations = () => {
             if (data.created) {
                 setError("")
                 setSuccess(data.success.message)
-                combinationsFetchHandler()
+                classesFetchHandler()
 
                 // Clear all
                 clearAll(e)
@@ -182,11 +182,11 @@ const Combinations = () => {
         }
     }
 
-    // Get a combination by id handler
-    const oneCombinationFetchHandler = async (combinationId) => {
+    // Get a class by id handler
+    const oneClassFetchHandler = async (combinationId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/combinations/${combinationId}`, configCommon)
+            const { data } = await axios.get(`http://localhost:3300/api/classes/${classId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -208,13 +208,13 @@ const Combinations = () => {
         }
     }
 
-    // Update a combination handler
-    const combinationUpdateHandler = async (e) => {
+    // Update a class handler
+    const classUpdateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/combinations/${combinationId}`, {
+            const { data } = await axios.put(`http://localhost:3300/api/classes/${classId}`, {
                 grade: grade,
                 subject: subject,
                 group: group,
@@ -225,7 +225,7 @@ const Combinations = () => {
             if (data.created) {
                 setError("")
                 setSuccess(data.success.message)
-                combinationsFetchHandler()
+                classesFetchHandler()
 
                 // Clear all
                 clearAll(e)
@@ -251,18 +251,18 @@ const Combinations = () => {
         }
     }
 
-    // Delete a combination handler
-    const combinationDeleteHandler = async (e, combinationId) => {
+    // Delete a class handler
+    const classDeleteHandler = async (e, classId) => {
         e.preventDefault()
 
-        if (window.confirm("Are you really want to delete this combination?")) {
+        if (window.confirm("Are you really want to delete this class?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/combinations/${combinationId}`, configCommon)
+                const { data } = await axios.delete(`http://localhost:3300/api/classes/${classId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
-                    combinationsFetchHandler()
+                    classesFetchHandler()
                 }
                 else {
                     if (data.authEx) {
@@ -282,18 +282,18 @@ const Combinations = () => {
         }
     }
 
-    // Search a combination by a query handler
-    const teacherSearchHandler = async (query) => {
+    // Search a class by a query handler
+    const classSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/combinations/search/${query}`, configCommon)
-                setCombinations(data)
+                const { data } = await axios.get(`http://localhost:3300/api/classes/search/${query}`, configCommon)
+                setClasses(data)
             } catch (err) {
                 alert(err.message)
             }
         }
         else {
-            combinationsFetchHandler()
+            classesFetchHandler()
         }
     }
 
@@ -392,7 +392,7 @@ const Combinations = () => {
             <div className="data-content">
                 <div>
                     <div className="data-form">
-                        <h2>Manage Combinations</h2>
+                        <h2>Manage Classes</h2>
                         <form>
                             <div className="select-box">
                                 <label className="drop-text" htmlFor="drop-down2">Grade</label>
@@ -472,7 +472,7 @@ const Combinations = () => {
                                     }
                                 </datalist>
                             </div>
-                            <SubmitBtn clickFunc={!combinationId ? combinationCreateHandler : combinationUpdateHandler} text={!combinationId ? "Add a Combination" : "Update a Combination"} />
+                            <SubmitBtn clickFunc={!classId ? classCreateHandler : classUpdateHandler} text={!classId ? "Add a Class" : "Update a Class"} />
                             <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                             {error &&
                                 <div className="msg err">{error}</div>
@@ -485,7 +485,7 @@ const Combinations = () => {
                     <div className="data-table">
                         <div>
                             <div className="search-sec">
-                                <InputBox placeText="Search Combinations..." inputState={teacherSearchHandler} />
+                                <InputBox placeText="Search Combinations..." inputState={classSearchHandler} />
                             </div>
                             <table>
                                 <thead>
@@ -502,8 +502,8 @@ const Combinations = () => {
                                 </thead>
                                 <tbody>
                                     {
-                                        combinations.length > 0 && (
-                                            combinations.map((obj, index) => {
+                                        classes.length > 0 && (
+                                            classes.map((obj, index) => {
                                                 const { _id, grade, subject, group, teacherReg, studentReg } = obj
                                                 return (
                                                     <tr key={_id}>
@@ -514,10 +514,10 @@ const Combinations = () => {
                                                         <td>{teacherReg}</td>
                                                         <td>{studentReg}</td>
                                                         <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setCombinationId(_id)
-                                                            oneCombinationFetchHandler(_id)
+                                                            setClassId(_id)
+                                                            oneClassFetchHandler(_id)
                                                         }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => combinationDeleteHandler(e, _id)}>Delete</a></td>
+                                                        <td className="td-btn td-del"><a onClick={(e) => classDeleteHandler(e, _id)}>Delete</a></td>
                                                     </tr>
                                                 )
                                             })

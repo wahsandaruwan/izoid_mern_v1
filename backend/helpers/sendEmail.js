@@ -35,8 +35,8 @@ exports.sendEmail = async (email, regNum, subject, password) => {
             from: `Izoid Education Center ${process.env.EMAIL}`,
             to: email,
             subject: subject,
-            text: `Here is your credentials, Registration Code : ${regNum} | Password : ${password}`,
-            html: `<h2>${subject}</h2><br><h3>Here is your credentials...</h3><br><b>Registration Code : ${regNum}</b><br><b>Password : ${password}</b>`
+            text: `Registration code : ${regNum} || Here is your login credentials, Email address : ${email} | Password : ${password}`,
+            html: `<h2>${subject}</h2><br><h3>Here is your Registration code</h3><br><b>Registration Code : ${regNum}</b><br><br><h3>Here is your login credentials...</h3><br><b>Email address : ${email}</b><br><b>Password : ${password}</b>`
         })
     } catch (err) {
         console.log(err.message)
