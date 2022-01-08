@@ -28,3 +28,7 @@ router.get("/search/:searchQuery", authUser, authRole(["Owner", "Manager"]), get
 router.get("/reg/:regNum", getTeacherByRegNum)
 
 module.exports = router
+
+// ---------------------------
+// Developed by WAHSANDARUWAN
+// ---------------------------
