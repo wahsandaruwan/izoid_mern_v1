@@ -6,16 +6,15 @@ import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
 import Loader from "../Elements/Loader"
 
-const Admins = () => {
-    // Admin data states
-    const [admins, setAdmins] = useState("")
-    const [adminId, setAdminId] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [gender, setGender] = useState("")
-    const [type, setType] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+const Assignments = () => {
+    // Assignment data states
+    const [assignments, setAssignments] = useState("")
+    const [assignmentId, setAssignmentId] = useState("")
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+    const [date, setDate] = useState("")
+    const [link, setLink] = useState("")
+    const [visibility, setVisibility] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
 
@@ -50,40 +49,34 @@ const Admins = () => {
     const history = useHistory()
 
     // Update states
-    const firstNameState = (newVal) => {
+    const titleState = (newVal) => {
         setError("")
         setSuccess("")
-        setFirstName(newVal)
+        setTitle(newVal)
     }
 
-    const lastNameState = (newVal) => {
+    const descriptionState = (newVal) => {
         setError("")
         setSuccess("")
-        setLastName(newVal)
+        setDescription(newVal)
     }
 
-    const typeState = (newVal) => {
+    const dateState = (newVal) => {
         setError("")
         setSuccess("")
-        setType(newVal)
+        setDate(newVal)
     }
 
-    const genderState = (newVal) => {
+    const linkState = (newVal) => {
         setError("")
         setSuccess("")
-        setGender(newVal)
+        setLink(newVal)
     }
 
-    const emailState = (newVal) => {
+    const visibilityState = (newVal) => {
         setError("")
         setSuccess("")
-        setEmail(newVal)
-    }
-
-    const passwordState = (newVal) => {
-        setError("")
-        setSuccess("")
-        setPassword(newVal)
+        setVisibility(newVal)
     }
 
     // Clear all
@@ -91,15 +84,14 @@ const Admins = () => {
         e.preventDefault()
 
         // Clear input fields
-        setFirstName("")
-        setLastName("")
-        setType("")
-        setGender("")
-        setEmail("")
-        setPassword("")
+        setTitle("")
+        setDescription("")
+        setDate("")
+        setLink("")
+        setVisibility("")
 
-        // Clear selected admin id
-        setAdminId("")
+        // Clear selected assignment id
+        setAssignmentId("")
 
         // Clear error and success
         setError("")
@@ -107,13 +99,13 @@ const Admins = () => {
             setSuccess("")
         }, 3000)
 
-        adminsFetchHandler()
+        assignmentsFetchHandler()
     }
 
-    // Admin fetch handler
-    const adminsFetchHandler = async () => {
+    // Assignment fetch handler
+    const assignmentsFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}admins/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}assignments/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -121,7 +113,7 @@ const Admins = () => {
                 history.push("/")
             }
             else {
-                setAdmins(data)
+                setAssignments(data)
                 setLoading(false)
             }
         } catch (err) {
@@ -129,34 +121,34 @@ const Admins = () => {
         }
     }
 
-    // Handle fetching all admins
+    // Handle fetching all assignments
     useEffect(() => {
         let isMounted = true
         if (isMounted) {
-            adminsFetchHandler()
+            assignmentsFetchHandler()
         }
         return () => { isMounted = false }
     }, [])
 
-    // Create admin handler
-    const adminCreateHandler = async (e) => {
+    // Create assignment handler
+    const assignmentCreateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
         try {
-            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}admins/register`, {
-                firstName: firstName,
-                lastName: lastName,
-                type: type,
-                gender: gender,
-                email: email,
-                password: password
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}assignments/create`, {
+                title: title,
+                description: description,
+                date: date,
+                link: link,
+                visibility: visibility,
+                teacherReg: regCode
             }, configPost)
 
             if (data.created) {
                 setError("")
                 setSuccess(data.success.message)
-                adminsFetchHandler()
+                assignmentsFetchHandler()
 
                 // Clear all
                 clearAll(e)
@@ -182,11 +174,11 @@ const Admins = () => {
         }
     }
 
-    // Get an admin by id handler
-    const oneAdminFetchHandler = async (adminId) => {
+    // Get an assignment by id handler
+    const oneAssignmentFetchHandler = async (assignmentId) => {
         // Api call
         try {
-            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}admins/${adminId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}assignments/${assignmentId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -196,11 +188,11 @@ const Admins = () => {
                 history.push("/")
             }
             else {
-                setFirstName(data.firstName)
-                setLastName(data.lastName)
-                setType(data.type)
-                setGender(data.gender)
-                setEmail(data.email)
+                setTitle(data.title)
+                setDescription(data.description)
+                setDate(data.date)
+                setLink(data.link)
+                setVisibility(data.visibility)
             }
         } catch (err) {
             setSuccess("")
@@ -208,25 +200,25 @@ const Admins = () => {
         }
     }
 
-    // Update an admin handler
-    const adminUpdateHandler = async (e) => {
+    // Update an assignment handler
+    const assignmentUpdateHandler = async (e) => {
         e.preventDefault()
 
         // Api call
         try {
-            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}admins/${adminId}`, {
-                firstName: firstName,
-                lastName: lastName,
-                type: type,
-                gender: gender,
-                email: email,
-                password: password
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}assignments/${assignmentId}`, {
+                title: title,
+                description: description,
+                date: date,
+                link: link,
+                visibility: visibility,
+                teacherReg: regCode
             }, configPost)
 
             if (data.created) {
                 setError("")
                 setSuccess(data.success.message)
-                adminsFetchHandler()
+                assignmentsFetchHandler()
 
                 // Clear all
                 clearAll(e)
@@ -252,18 +244,18 @@ const Admins = () => {
         }
     }
 
-    // Delete an admin handler
-    const adminDeleteHandler = async (e, adminId) => {
+    // Delete an assignment handler
+    const assignmentDeleteHandler = async (e, assignmentId) => {
         e.preventDefault()
 
-        if (window.confirm("Are you really want to delete this admin?")) {
+        if (window.confirm("Are you really want to delete this assignment?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}admins/${regCode}/${adminId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}assignments/${assignmentId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
-                    adminsFetchHandler()
+                    assignmentsFetchHandler()
                 }
                 else {
                     if (data.authEx) {
@@ -283,18 +275,18 @@ const Admins = () => {
         }
     }
 
-    // Search an admin by a query handler
-    const adminSearchHandler = async (query) => {
+    // Search an assignment by a query handler
+    const assignmentSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}admins/search/${query}`, configCommon)
-                setAdmins(data)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}assignments/search/${query}`, configCommon)
+                setAssignments(data)
             } catch (err) {
                 alert(err.message)
             }
         }
         else {
-            adminsFetchHandler()
+            assignmentsFetchHandler()
         }
     }
 
@@ -307,29 +299,24 @@ const Admins = () => {
                     ) : (
                         <div>
                             <div className="data-form">
-                                <h2>Manage Admins</h2>
+                                <h2>Manage Assignments</h2>
                                 <form>
-                                    <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
-                                    <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
+                                    <InputBox placeText="Title" defaultValue={title} type="text" inputState={titleState} />
+                                    <textarea className="textarea-box" placeholder="Description" value={description} type="text" onChange={(e) => descriptionState(e.target.value)}></textarea>
+                                    <div className="date">
+                                        <label className="date-text" htmlFor="date_picker">Due Date</label>
+                                        <input type="date" id="date_picker" min={new Date().toISOString().split("T")[0]} className="date-picker" value={date} onChange={(e) => dateState(e.target.value)} />
+                                    </div>
+                                    <InputBox placeText="Assignment Link" defaultValue={link} type="text" inputState={linkState} />
                                     <div className="select-box">
-                                        <label className="drop-text" htmlFor="drop-down1">Admin Type</label>
-                                        <select id="drop-down1" value={type} className="frm-drop" onChange={(e) => typeState(e.target.value)}>
+                                        <label className="drop-text" htmlFor="drop-visi">Visibility</label>
+                                        <select id="drop-visi" value={visibility} className="frm-drop" onChange={(e) => visibilityState(e.target.value)}>
                                             <option value=""></option>
-                                            <option value="Manager">Manager</option>
-                                            <option value="Owner">Owner</option>
+                                            <option value="Public">Public</option>
+                                            <option value="Private">Private</option>
                                         </select>
                                     </div>
-                                    <div className="select-box">
-                                        <label className="drop-text" htmlFor="drop-gender3">Gender</label>
-                                        <select id="drop-gender3" value={gender} className="frm-drop" onChange={(e) => genderState(e.target.value)}>
-                                            <option value=""></option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-                                    <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
-                                    <InputBox placeText={!adminId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
-                                    <SubmitBtn clickFunc={!adminId ? adminCreateHandler : adminUpdateHandler} text={!adminId ? "Add an Admin" : "Update an Admin"} />
+                                    <SubmitBtn clickFunc={!assignmentId ? assignmentCreateHandler : assignmentUpdateHandler} text={!assignmentId ? "Add an Assignment" : "Update an Assignment"} />
                                     <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
                                     {error &&
                                         <div className="msg err">{error}</div>
@@ -342,18 +329,17 @@ const Admins = () => {
                             <div className="data-table">
                                 <div>
                                     <div className="search-sec">
-                                        <InputBox placeText="Search Admins..." inputState={adminSearchHandler} />
+                                        <InputBox placeText="Search Assignments..." inputState={assignmentSearchHandler} />
                                     </div>
                                     <table>
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Registration Code</th>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Type</th>
-                                                <th>Gender</th>
-                                                <th>Email</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>Due Date</th>
+                                                <th>Download</th>
+                                                <th>Visibility</th>
                                                 <th>Creation Date</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
@@ -361,24 +347,23 @@ const Admins = () => {
                                         </thead>
                                         <tbody>
                                             {
-                                                admins.length > 0 && (
-                                                    admins.map((obj, index) => {
-                                                        const { _id, regNum, firstName, lastName, type, gender, email, createdAt } = obj
+                                                assignments.length > 0 && (
+                                                    assignments.map((obj, index) => {
+                                                        const { _id, title, description, date, link, visibility, createdAt } = obj
                                                         return (
                                                             <tr key={_id}>
                                                                 <td>{index + 1}</td>
-                                                                <td>{regNum}</td>
-                                                                <td>{firstName}</td>
-                                                                <td>{lastName}</td>
-                                                                <td>{type}</td>
-                                                                <td>{gender}</td>
-                                                                <td>{email}</td>
+                                                                <td>{title}</td>
+                                                                <td>{description}</td>
+                                                                <td>{date}</td>
+                                                                <td className="td-btn td-view"><a href={link} target="_blank">Download</a></td>
+                                                                <td>{visibility}</td>
                                                                 <td>{createdAt}</td>
                                                                 <td className="td-btn td-edit"><a onClick={(e) => {
-                                                                    setAdminId(_id)
-                                                                    oneAdminFetchHandler(_id)
+                                                                    setAssignmentId(_id)
+                                                                    oneAssignmentFetchHandler(_id)
                                                                 }}>Edit</a></td>
-                                                                <td className="td-btn td-del"><a onClick={(e) => adminDeleteHandler(e, _id)}>Delete</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => assignmentDeleteHandler(e, _id)}>Delete</a></td>
                                                             </tr>
                                                         )
                                                     })
@@ -396,4 +381,4 @@ const Admins = () => {
     )
 }
 
-export default Admins
+export default Assignments

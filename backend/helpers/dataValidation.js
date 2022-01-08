@@ -21,7 +21,7 @@ exports.validatePhone = (phone) => {
 // Custom reg num validation
 exports.validateRegNum = async (regNum, type) => {
   if (type === "Teacher") {
-    const { data } = await axios.get(`http://localhost:3300/api/teachers/reg/${regNum}`, {
+    const { data } = await axios.get(`${process.env.BACKEND_API}teachers/reg/${regNum}`, {
       headers: {
         "Content-tpe": "application/json"
       }
@@ -30,7 +30,7 @@ exports.validateRegNum = async (regNum, type) => {
     return data
   }
   else if (type === "Student") {
-    const { data } = await axios.get(`http://localhost:3300/api/students/reg/${regNum}`, {
+    const { data } = await axios.get(`${process.env.BACKEND_API}students/reg/${regNum}`, {
       headers: {
         "Content-tpe": "application/json"
       }

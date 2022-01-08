@@ -1,17 +1,19 @@
 const Admin = require("../models/adminModel")
+const Teacher = require("../models/teacherModel")
+const Student = require("../models/studentModel")
 const bcrypt = require("bcrypt")
 const { randomReg, randomJWT } = require("../helpers/randomGen")
 const { sendEmail } = require('../helpers/sendEmail')
 
 // Admin registration
 exports.adminRegistration = async (req, res) => {
-    const { firstName, lastName, type, email, password } = req.body
+    const { firstName, lastName, gender, type, email, password } = req.body
     let newPass = "";
 
     // Generate random reg number
     const regNum = randomReg(type)
 
-    // Check if reg num or email already exist
+    // Check reg num or email already exist
     const admin = await Admin.find({ $or: [{ email }, { regNum }] })
     if (admin.length > 0) {
         if (admin[0].email === email) {
@@ -20,6 +22,13 @@ exports.adminRegistration = async (req, res) => {
         else if (admin[0].regNum === regNum) {
             return res.json({ errors: { message: "Something went wrong try again!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailTeacher = await Teacher.findOne({ email })
+    const emailStudent = await Student.findOne({ email })
+    if (emailTeacher || emailStudent) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     // Password hashing
@@ -42,6 +51,7 @@ exports.adminRegistration = async (req, res) => {
         firstName: firstName,
         lastName: lastName,
         type: type,
+        gender: gender,
         email: email,
         password: newPass
     })
@@ -58,7 +68,7 @@ exports.adminRegistration = async (req, res) => {
 
 // Admin login
 exports.adminLogin = async (req, res) => {
-    const { email, password } = req.body
+    const { type, email, password } = req.body
 
     // Check if reg num already exists
     const admin = await Admin.findOne({ email })
@@ -70,6 +80,11 @@ exports.adminLogin = async (req, res) => {
     const passOk = await bcrypt.compare(password, admin.password)
     if (!passOk) {
         return res.json({ errors: { message: "Wrong password!" } })
+    }
+
+    // Confirm the type
+    if (!type === "admin") {
+        return res.json({ errors: { message: "Wrong user type!" } })
     }
 
     // Generate jwt
@@ -122,12 +137,19 @@ exports.updateAdmin = async (req, res) => {
         }
     }
 
-    // Check if email already exists
+    // Check email already exists
     const adminByEmail = await Admin.findOne({ email })
     if (adminByEmail) {
         if (adminByEmail.id !== id) {
             return res.json({ errors: { message: "Email already exist!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailTeacher = await Teacher.findOne({ email })
+    const emailStudent = await Student.findOne({ email })
+    if (emailTeacher || emailStudent) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     try {
@@ -144,7 +166,15 @@ exports.updateAdmin = async (req, res) => {
 
 // Delete an admin
 exports.deleteAdmin = async (req, res) => {
-    const { id } = req.params
+    const { id, regCode } = req.params
+
+    // Check admin trying to delete his/her own account
+    const admin = await Admin.findById(id)
+    if (admin) {
+        if (admin.regNum === regCode) {
+            return res.json({ errors: { message: "You can't delete your admin account!" } })
+        }
+    }
 
     try {
         await Admin.findByIdAndDelete(id)
@@ -160,7 +190,7 @@ exports.getAdminsBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const admins = await Admin.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { type: regexQuery }] })
+        const admins = await Admin.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { type: regexQuery }, { createdAt: regexQuery }] })
         res.status(200).json(admins)
     } catch (err) {
         res.json({ errors: { message: err.message } })

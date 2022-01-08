@@ -55,6 +55,7 @@ a {
 
 .date,
 .select-box {
+  width: 100%;
   position: relative;
 }
 
@@ -200,6 +201,8 @@ td {
 
 th,
 td {
+  max-height: 25px;
+  line-height: 25px;
   padding: 10px;
   font-weight: 400;
   color: #032e27;
@@ -231,6 +234,10 @@ th {
   background-color: #aa2412;
 }
 
+.td-view a {
+  background-color: #065c4d;
+}
+
 /* --------Home page-------- */
 .home-sec {
   min-height: 90vh;
@@ -241,7 +248,7 @@ th {
 }
 
 .home-content {
-  max-width: 600px;
+  max-width: 650px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -292,18 +299,20 @@ th {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 .data-content > div {
   padding: 15px;
   display: flex;
   align-items: flex-start;
+  justify-content: center;
 }
 
 .data-form {
-  max-width: 420px;
-  min-width: 380px;
-  width: 40%;
+  max-width: 380px;
+  min-width: 360px;
+  flex: 1;
   max-height: 650px;
   overflow: hidden;
   background-color: #fff;
@@ -314,7 +323,7 @@ th {
 }
 
 .data-form form .inputs {
-  max-height: 400px;
+  max-height: 350px;
   overflow-y: scroll;
   margin-bottom: 20px;
 }
@@ -344,9 +353,10 @@ th {
 }
 
 .data-table {
-  max-width: 650px;
-  width: 60%;
+  max-width: 700px;
+  min-width: 400px;
   max-height: 650px;
+  flex: 3;
   overflow: hidden;
   background-color: #fff;
   padding: 10px;
@@ -359,7 +369,38 @@ th {
   overflow: scroll;
 }
 
-@media (max-width: 1250px) {
+/* --------Loader-------- */
+.loader {
+  border: 5px solid #fff;
+  border-radius: 50%;
+  border-top: 5px solid #0c7c37;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------Responsive-------- */
+@media (max-width: 1400px) {
   .data-content > div {
     align-items: center;
     flex-direction: column;
@@ -368,5 +409,17 @@ th {
   .data-form {
     /* max-width: 800px; */
     margin-bottom: 10px;
+  }
+
+  .data-form form .inputs {
+    max-height: 250px;
+  }
+
+  .data-table {
+    max-height: 500px;
+  }
+
+  .data-table > div {
+    max-height: 400px;
   }
 }

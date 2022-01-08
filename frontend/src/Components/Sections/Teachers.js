@@ -4,6 +4,7 @@ import axios from "axios"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
+import Loader from "../Elements/Loader"
 
 const Teachers = () => {
     // Teacher data states
@@ -11,11 +12,15 @@ const Teachers = () => {
     const [teacherId, setTeacherId] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
+    const [gender, setGender] = useState("")
     const [phone, setPhone] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    // Loading state
+    const [loading, setLoading] = useState(true)
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
@@ -55,6 +60,12 @@ const Teachers = () => {
         setLastName(newVal)
     }
 
+    const genderState = (newVal) => {
+        setError("")
+        setSuccess("")
+        setGender(newVal)
+    }
+
     const phoneState = (newVal) => {
         setError("")
         setSuccess("")
@@ -80,6 +91,7 @@ const Teachers = () => {
         // Clear input fields
         setFirstName("")
         setLastName("")
+        setGender("")
         setPhone("")
         setEmail("")
         setPassword("")
@@ -99,7 +111,7 @@ const Teachers = () => {
     // Teachers fetch handler
     const teachersFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/teachers/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}teachers/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -108,6 +120,7 @@ const Teachers = () => {
             }
             else {
                 setTeachers(data)
+                setLoading(false)
             }
         } catch (err) {
             alert(err.message)
@@ -116,7 +129,11 @@ const Teachers = () => {
 
     // Handle fetching all teachers
     useEffect(() => {
-        teachersFetchHandler()
+        let isMounted = true
+        if (isMounted) {
+            teachersFetchHandler()
+        }
+        return () => { isMounted = false }
     }, [])
 
     // Create teacher handler
@@ -125,9 +142,10 @@ const Teachers = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/teachers/register`, {
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}teachers/register`, {
                 firstName: firstName,
                 lastName: lastName,
+                gender: gender,
                 phone: phone,
                 email: email,
                 password: password
@@ -166,7 +184,7 @@ const Teachers = () => {
     const oneTeacherFetchHandler = async (adminId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/teachers/${adminId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}teachers/${adminId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -178,6 +196,7 @@ const Teachers = () => {
             else {
                 setFirstName(data.firstName)
                 setLastName(data.lastName)
+                setGender(data.gender)
                 setPhone(data.phone)
                 setEmail(data.email)
             }
@@ -193,9 +212,10 @@ const Teachers = () => {
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/teachers/${teacherId}`, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}teachers/${teacherId}`, {
                 firstName: firstName,
                 lastName: lastName,
+                gender: gender,
                 phone: phone,
                 email: email,
                 password: password
@@ -231,13 +251,13 @@ const Teachers = () => {
     }
 
     // Delete a teacher handler
-    const teacherDeleteHandler = async (e, teacherId) => {
+    const teacherDeleteHandler = async (e, teacherId, regNum) => {
         e.preventDefault()
 
         if (window.confirm("Are you really want to delete this teacher?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/teachers/${teacherId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}teachers/${regNum}/${teacherId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
@@ -265,7 +285,7 @@ const Teachers = () => {
     const teacherSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/teachers/search/${query}`, configCommon)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}teachers/search/${query}`, configCommon)
                 setTeachers(data)
             } catch (err) {
                 alert(err.message)
@@ -279,71 +299,89 @@ const Teachers = () => {
     return (
         <>
             <div className="data-content">
-                <div>
-                    <div className="data-form">
-                        <h2>Manage Teachers</h2>
-                        <form>
-                            <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
-                            <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
-                            <InputBox placeText="Phone" defaultValue={phone} type="text" inputState={phoneState} />
-                            <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
-                            <InputBox placeText={!teacherId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
-                            <SubmitBtn clickFunc={!teacherId ? teacherCreateHandler : teacherUpdateHandler} text={!teacherId ? "Add a Teacher" : "Update a Teacher"} />
-                            <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
-                            {error &&
-                                <div className="msg err">{error}</div>
-                            }
-                            {success &&
-                                <div className="msg success">{success}</div>
-                            }
-                        </form>
-                    </div>
-                    <div className="data-table">
+                {
+                    loading ? (
+                        <Loader />
+                    ) : (
                         <div>
-                            <div className="search-sec">
-                                <InputBox placeText="Search Teachers..." inputState={teacherSearchHandler} />
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Registration Code</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        teachers.length > 0 && (
-                                            teachers.map((obj, index) => {
-                                                const { _id, regNum, firstName, lastName, phone, email } = obj
-                                                return (
-                                                    <tr key={_id}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{regNum}</td>
-                                                        <td>{firstName}</td>
-                                                        <td>{lastName}</td>
-                                                        <td>{phone}</td>
-                                                        <td>{email}</td>
-                                                        <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setTeacherId(_id)
-                                                            oneTeacherFetchHandler(_id)
-                                                        }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => teacherDeleteHandler(e, _id)}>Delete</a></td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )
+                            <div className="data-form">
+                                <h2>Manage Teachers</h2>
+                                <form>
+                                    <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
+                                    <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
+                                    <div className="select-box">
+                                        <label className="drop-text" htmlFor="drop-gender2">Gender</label>
+                                        <select id="drop-gender2" value={gender} className="frm-drop" onChange={(e) => genderState(e.target.value)}>
+                                            <option value=""></option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                    <InputBox placeText="Phone" defaultValue={phone} type="text" inputState={phoneState} />
+                                    <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
+                                    <InputBox placeText={!teacherId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
+                                    <SubmitBtn clickFunc={!teacherId ? teacherCreateHandler : teacherUpdateHandler} text={!teacherId ? "Add a Teacher" : "Update a Teacher"} />
+                                    <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
+                                    {error &&
+                                        <div className="msg err">{error}</div>
                                     }
-                                </tbody>
-                            </table>
+                                    {success &&
+                                        <div className="msg success">{success}</div>
+                                    }
+                                </form>
+                            </div>
+                            <div className="data-table">
+                                <div>
+                                    <div className="search-sec">
+                                        <InputBox placeText="Search Teachers..." inputState={teacherSearchHandler} />
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Registration Code</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Gender</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                                <th>Creation Date</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                teachers.length > 0 && (
+                                                    teachers.map((obj, index) => {
+                                                        const { _id, regNum, firstName, lastName, gender, phone, email, createdAt } = obj
+                                                        return (
+                                                            <tr key={_id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{regNum}</td>
+                                                                <td>{firstName}</td>
+                                                                <td>{lastName}</td>
+                                                                <td>{gender}</td>
+                                                                <td>{phone}</td>
+                                                                <td>{email}</td>
+                                                                <td>{createdAt}</td>
+                                                                <td className="td-btn td-edit"><a onClick={(e) => {
+                                                                    setTeacherId(_id)
+                                                                    oneTeacherFetchHandler(_id)
+                                                                }}>Edit</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => teacherDeleteHandler(e, _id, regNum)}>Delete</a></td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </>
     )

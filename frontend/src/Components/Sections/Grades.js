@@ -4,6 +4,7 @@ import axios from "axios"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
+import Loader from "../Elements/Loader"
 
 const Grades = () => {
     // Grade data states
@@ -12,6 +13,9 @@ const Grades = () => {
     const [name, setName] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    // Loading state
+    const [loading, setLoading] = useState(true)
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
@@ -67,7 +71,7 @@ const Grades = () => {
     // Grades fetch handler
     const gradesFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/grades/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}grades/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -76,6 +80,7 @@ const Grades = () => {
             }
             else {
                 setGrades(data)
+                setLoading(false)
             }
         } catch (err) {
             alert(err.message)
@@ -84,7 +89,11 @@ const Grades = () => {
 
     // Handle fetching all grades
     useEffect(() => {
-        gradesFetchHandler()
+        let isMounted = true
+        if (isMounted) {
+            gradesFetchHandler()
+        }
+        return () => { isMounted = false }
     }, [])
 
     // Create grade handler
@@ -93,7 +102,7 @@ const Grades = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/grades/create`, {
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}grades/create`, {
                 name: name
             }, configPost)
 
@@ -130,7 +139,7 @@ const Grades = () => {
     const oneGradeFetchHandler = async (gradeId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/grades/${gradeId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}grades/${gradeId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -154,7 +163,7 @@ const Grades = () => {
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/grades/${gradeId}`, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}grades/${gradeId}`, {
                 name: name
             }, configPost)
 
@@ -194,7 +203,7 @@ const Grades = () => {
         if (window.confirm("Are you really want to delete this grade?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/grades/${gradeId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}grades/${gradeId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
@@ -222,7 +231,7 @@ const Grades = () => {
     const gradeSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/grades/search/${query}`, configCommon)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}grades/search/${query}`, configCommon)
                 setGrades(data)
             } catch (err) {
                 alert(err.message)
@@ -236,59 +245,65 @@ const Grades = () => {
     return (
         <>
             <div className="data-content">
-                <div>
-                    <div className="data-form">
-                        <h2>Manage Grades</h2>
-                        <form>
-                            <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
-                            <SubmitBtn clickFunc={!gradeId ? gradeCreateHandler : gradeUpdateHandler} text={!gradeId ? "Add a Grade" : "Update a Grade"} />
-                            <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
-                            {error &&
-                                <div className="msg err">{error}</div>
-                            }
-                            {success &&
-                                <div className="msg success">{success}</div>
-                            }
-                        </form>
-                    </div>
-                    <div className="data-table">
+                {
+                    loading ? (
+                        <Loader />
+                    ) : (
                         <div>
-                            <div className="search-sec">
-                                <InputBox placeText="Search Grades..." inputState={gradeSearchHandler} />
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        grades.length > 0 && (
-                                            grades.map((obj, index) => {
-                                                const { _id, name } = obj
-                                                return (
-                                                    <tr key={_id}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{name}</td>
-                                                        <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setGradeId(_id)
-                                                            oneGradeFetchHandler(_id)
-                                                        }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => gradeDeleteHandler(e, _id)}>Delete</a></td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )
+                            <div className="data-form">
+                                <h2>Manage Grades</h2>
+                                <form>
+                                    <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
+                                    <SubmitBtn clickFunc={!gradeId ? gradeCreateHandler : gradeUpdateHandler} text={!gradeId ? "Add a Grade" : "Update a Grade"} />
+                                    <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
+                                    {error &&
+                                        <div className="msg err">{error}</div>
                                     }
-                                </tbody>
-                            </table>
+                                    {success &&
+                                        <div className="msg success">{success}</div>
+                                    }
+                                </form>
+                            </div>
+                            <div className="data-table">
+                                <div>
+                                    <div className="search-sec">
+                                        <InputBox placeText="Search Grades..." inputState={gradeSearchHandler} />
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                grades.length > 0 && (
+                                                    grades.map((obj, index) => {
+                                                        const { _id, name } = obj
+                                                        return (
+                                                            <tr key={_id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{name}</td>
+                                                                <td className="td-btn td-edit"><a onClick={(e) => {
+                                                                    setGradeId(_id)
+                                                                    oneGradeFetchHandler(_id)
+                                                                }}>Edit</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => gradeDeleteHandler(e, _id)}>Delete</a></td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </>
     )

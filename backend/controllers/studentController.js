@@ -1,11 +1,14 @@
 const Student = require("../models/studentModel")
+const Admin = require("../models/adminModel")
+const Teacher = require("../models/studentModel")
+const Class = require("../models/classModel")
 const bcrypt = require("bcrypt")
-const { randomReg } = require("../helpers/randomGen")
+const { randomReg, randomJWT } = require("../helpers/randomGen")
 const { sendEmail } = require('../helpers/sendEmail')
 
 // Student registration
 exports.studentRegistration = async (req, res) => {
-    const { firstName, lastName, dateOfBirth, homeAddress, schoolName, parentsName, parentsPhone, email, password } = req.body
+    const { firstName, lastName, dateOfBirth, gender, homeAddress, schoolName, parentsName, parentsPhone, email, password } = req.body
     let newPass = "";
 
     // Generate random reg number
@@ -20,6 +23,13 @@ exports.studentRegistration = async (req, res) => {
         else if (student[0].regNum === regNum) {
             return res.json({ errors: { message: "Something went wrong try again!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailAdmin = await Admin.findOne({ email })
+    const emailTeacher = await Teacher.findOne({ email })
+    if (emailAdmin || emailTeacher) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     // Password hashing
@@ -42,6 +52,7 @@ exports.studentRegistration = async (req, res) => {
         firstName: firstName,
         lastName: lastName,
         type: "Student",
+        gender: gender,
         dateOfBirth: dateOfBirth,
         homeAddress: homeAddress,
         schoolName: schoolName,
@@ -61,11 +72,37 @@ exports.studentRegistration = async (req, res) => {
     }
 }
 
+// Student login
+exports.studentLogin = async (req, res) => {
+    const { type, email, password } = req.body
+
+    // Check if reg num already exists
+    const student = await Student.findOne({ email })
+    if (!student) {
+        return res.json({ errors: { message: "Wrong email address!" } })
+    }
+
+    // Check if password matches
+    const passOk = await bcrypt.compare(password, student.password)
+    if (!passOk) {
+        return res.json({ errors: { message: "Wrong password!" } })
+    }
+
+    // Confirm the type
+    if (!type === "Student") {
+        return res.json({ errors: { message: "Wrong user type!" } })
+    }
+
+    // Generate jwt
+    const jwt = randomJWT(student)
+    res.status(200).json({ auth: true, token: jwt, regNum: student.regNum, firstName: student.firstName, type: student.type })
+}
+
 // Get all students
 exports.getAllStudents = async (req, res) => {
     try {
-        const student = await Student.find()
-        res.status(200).json(student)
+        const students = await Student.find()
+        res.status(200).json(students)
     } catch (err) {
         res.json({ errors: { message: err.message } })
     }
@@ -106,12 +143,19 @@ exports.updateStudent = async (req, res) => {
         }
     }
 
-    // Check if email already exists
+    // Check email already exists
     const studentByEmail = await Student.findOne({ email })
     if (studentByEmail) {
         if (studentByEmail.id !== id) {
             return res.json({ errors: { message: "Email already exist!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailAdmin = await Admin.findOne({ email })
+    const emailTeacher = await Teacher.findOne({ email })
+    if (emailAdmin || emailTeacher) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     try {
@@ -128,10 +172,12 @@ exports.updateStudent = async (req, res) => {
 
 // Delete a student
 exports.deleteStudent = async (req, res) => {
-    const { id } = req.params
+    const { regNum, id } = req.params
 
     try {
         await Student.findByIdAndDelete(id)
+        // Delete student from classes
+        await Class.updateMany({ students: regNum }, { $pull: { students: regNum } })
         res.status(200).json({ created: true, success: { message: "Student successfully deleted!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -144,7 +190,7 @@ exports.getStudentsBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const students = await Student.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { dateOfBirth: regexQuery }, { homeAddress: regexQuery }, { parentsName: regexQuery }, { parentsPhone: regexQuery }] })
+        const students = await Student.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { email: regexQuery }, { dateOfBirth: regexQuery }, { homeAddress: regexQuery }, { parentsName: regexQuery }, { parentsPhone: regexQuery }, { createdAt: regexQuery }] })
         res.status(200).json(students)
     } catch (err) {
         res.json({ errors: { message: err.message } })

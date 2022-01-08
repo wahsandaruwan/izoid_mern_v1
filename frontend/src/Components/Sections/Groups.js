@@ -4,6 +4,7 @@ import axios from "axios"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
+import Loader from "../Elements/Loader"
 
 const Groups = () => {
     // Groups data states
@@ -12,6 +13,9 @@ const Groups = () => {
     const [name, setName] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    // Loading state
+    const [loading, setLoading] = useState(true)
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
@@ -67,7 +71,7 @@ const Groups = () => {
     // Groups fetch handler
     const groupsFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/groups/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}groups/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -76,6 +80,7 @@ const Groups = () => {
             }
             else {
                 setGroups(data)
+                setLoading(false)
             }
         } catch (err) {
             alert(err.message)
@@ -84,7 +89,11 @@ const Groups = () => {
 
     // Handle fetching all groups
     useEffect(() => {
-        groupsFetchHandler()
+        let isMounted = true
+        if (isMounted) {
+            groupsFetchHandler()
+        }
+        return () => { isMounted = false }
     }, [])
 
     // Create group handler
@@ -93,7 +102,7 @@ const Groups = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/groups/create`, {
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}groups/create`, {
                 name: name
             }, configPost)
 
@@ -130,7 +139,7 @@ const Groups = () => {
     const oneGroupFetchHandler = async (groupId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/groups/${groupId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}groups/${groupId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -154,7 +163,7 @@ const Groups = () => {
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/groups/${groupId}`, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}groups/${groupId}`, {
                 name: name
             }, configPost)
 
@@ -194,7 +203,7 @@ const Groups = () => {
         if (window.confirm("Are you really want to delete this group?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/groups/${groupId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}groups/${groupId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
@@ -222,7 +231,7 @@ const Groups = () => {
     const groupSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/groups/search/${query}`, configCommon)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}groups/search/${query}`, configCommon)
                 setGroups(data)
             } catch (err) {
                 alert(err.message)
@@ -236,59 +245,65 @@ const Groups = () => {
     return (
         <>
             <div className="data-content">
-                <div>
-                    <div className="data-form">
-                        <h2>Manage Groups</h2>
-                        <form>
-                            <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
-                            <SubmitBtn clickFunc={!groupId ? groupCreateHandler : groupUpdateHandler} text={!groupId ? "Add a Group" : "Update a Group"} />
-                            <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
-                            {error &&
-                                <div className="msg err">{error}</div>
-                            }
-                            {success &&
-                                <div className="msg success">{success}</div>
-                            }
-                        </form>
-                    </div>
-                    <div className="data-table">
+                {
+                    loading ? (
+                        <Loader />
+                    ) : (
                         <div>
-                            <div className="search-sec">
-                                <InputBox placeText="Search Groups..." inputState={groupSearchHandler} />
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        groups.length > 0 && (
-                                            groups.map((obj, index) => {
-                                                const { _id, name } = obj
-                                                return (
-                                                    <tr key={_id}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{name}</td>
-                                                        <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setGroupId(_id)
-                                                            oneGroupFetchHandler(_id)
-                                                        }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => groupDeleteHandler(e, _id)}>Delete</a></td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )
+                            <div className="data-form">
+                                <h2>Manage Groups</h2>
+                                <form>
+                                    <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
+                                    <SubmitBtn clickFunc={!groupId ? groupCreateHandler : groupUpdateHandler} text={!groupId ? "Add a Group" : "Update a Group"} />
+                                    <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
+                                    {error &&
+                                        <div className="msg err">{error}</div>
                                     }
-                                </tbody>
-                            </table>
+                                    {success &&
+                                        <div className="msg success">{success}</div>
+                                    }
+                                </form>
+                            </div>
+                            <div className="data-table">
+                                <div>
+                                    <div className="search-sec">
+                                        <InputBox placeText="Search Groups..." inputState={groupSearchHandler} />
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                groups.length > 0 && (
+                                                    groups.map((obj, index) => {
+                                                        const { _id, name } = obj
+                                                        return (
+                                                            <tr key={_id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{name}</td>
+                                                                <td className="td-btn td-edit"><a onClick={(e) => {
+                                                                    setGroupId(_id)
+                                                                    oneGroupFetchHandler(_id)
+                                                                }}>Edit</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => groupDeleteHandler(e, _id)}>Delete</a></td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </>
     )

@@ -4,6 +4,7 @@ import axios from "axios"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
+import Loader from "../Elements/Loader"
 
 const Students = () => {
     // Student data states
@@ -12,6 +13,7 @@ const Students = () => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [dob, setDob] = useState("")
+    const [gender, setGender] = useState("")
     const [homeAddress, setHomeAddress] = useState("")
     const [schoolName, setSchoolName] = useState("")
     const [parentsName, setParentsName] = useState("")
@@ -20,6 +22,9 @@ const Students = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    // Loading state
+    const [loading, setLoading] = useState(true)
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
@@ -63,6 +68,12 @@ const Students = () => {
         setError("")
         setSuccess("")
         setDob(newVal)
+    }
+
+    const genderState = (newVal) => {
+        setError("")
+        setSuccess("")
+        setGender(newVal)
     }
 
     const homeAddressState = (newVal) => {
@@ -109,6 +120,7 @@ const Students = () => {
         setFirstName("")
         setLastName("")
         setDob("")
+        setGender("")
         setHomeAddress("")
         setSchoolName("")
         setParentsName("")
@@ -131,7 +143,7 @@ const Students = () => {
     // Students fetch handler
     const studentsFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/students/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}students/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -140,6 +152,7 @@ const Students = () => {
             }
             else {
                 setStudents(data)
+                setLoading(false)
             }
         } catch (err) {
             alert(err.message)
@@ -148,7 +161,11 @@ const Students = () => {
 
     // Handle fetching all students
     useEffect(() => {
-        studentsFetchHandler()
+        let isMounted = true
+        if (isMounted) {
+            studentsFetchHandler()
+        }
+        return () => { isMounted = false }
     }, [])
 
     // Create student handler
@@ -157,10 +174,11 @@ const Students = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/students/register`, {
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}students/register`, {
                 firstName: firstName,
                 lastName: lastName,
                 dateOfBirth: dob,
+                gender: gender,
                 homeAddress: homeAddress,
                 schoolName: schoolName,
                 parentsName: parentsName,
@@ -202,7 +220,7 @@ const Students = () => {
     const oneStudentFetchHandler = async (studentId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/students/${studentId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}students/${studentId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -215,6 +233,7 @@ const Students = () => {
                 setFirstName(data.firstName)
                 setLastName(data.lastName)
                 setDob(data.dateOfBirth)
+                setGender(data.gender)
                 setHomeAddress(data.homeAddress)
                 setSchoolName(data.schoolName)
                 setParentsName(data.parentsName)
@@ -233,10 +252,11 @@ const Students = () => {
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/students/${studentId}`, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}students/${studentId}`, {
                 firstName: firstName,
                 lastName: lastName,
                 dateOfBirth: dob,
+                gender: gender,
                 homeAddress: homeAddress,
                 schoolName: schoolName,
                 parentsName: parentsName,
@@ -275,13 +295,13 @@ const Students = () => {
     }
 
     // Delete a student handler
-    const studentDeleteHandler = async (e, studentId) => {
+    const studentDeleteHandler = async (e, studentId, regNum) => {
         e.preventDefault()
 
         if (window.confirm("Are you really want to delete this student?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/students/${studentId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}students/${regNum}/${studentId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
@@ -309,7 +329,7 @@ const Students = () => {
     const studentSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/students/search/${query}`, configCommon)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}students/search/${query}`, configCommon)
                 setStudents(data)
             } catch (err) {
                 alert(err.message)
@@ -324,92 +344,107 @@ const Students = () => {
 
     return (
         <>
-            {/* <div className="search-sec">
-                <InputBox placeText="Search Students..." inputState={studentSearchHandler} />
-            </div> */}
             <div className="data-content">
-                <div>
-                    <div className="data-form">
-                        <h2>Manage Students</h2>
-                        <form>
-                            <div className="inputs">
-                                <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
-                                <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
-                                <div className="date">
-                                    <label className="date-text" htmlFor="date_picker">Date of Birth</label>
-                                    <input type="date" id="date_picker" max={new Date().toISOString().split("T")[0]} className="date-picker" value={dob} onChange={(e) => dobState(e.target.value)} />
-                                </div>
-                                <textarea className="textarea-box" placeholder="Home Address" value={homeAddress} type="text" onChange={(e) => homeAddressState(e.target.value)}></textarea>
-                                <InputBox placeText="School Name" defaultValue={schoolName} type="text" inputState={schoolNameState} />
-                                <InputBox placeText="Parent's Name" defaultValue={parentsName} type="text" inputState={parentsNameState} />
-                                <InputBox placeText="Parent's Phone" defaultValue={parentsPhone} type="text" inputState={parentsPhoneState} />
-                                <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
-                                <InputBox placeText={!studentId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
-                            </div>
-                            <SubmitBtn clickFunc={!studentId ? studentCreateHandler : studentUpdateHandler} text={!studentId ? "Add a Student" : "Update a Student"} />
-                            <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
-                            {error &&
-                                <div className="msg err">{error}</div>
-                            }
-                            {success &&
-                                <div className="msg success">{success}</div>
-                            }
-                        </form>
-                    </div>
-                    <div className="data-table">
+                {
+                    loading ? (
+                        <Loader />
+                    ) : (
                         <div>
-                            <div className="search-sec">
-                                <InputBox placeText="Search Students..." inputState={studentSearchHandler} />
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Registration Code</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Date of Birth</th>
-                                        <th>Home Address</th>
-                                        <th>School Name</th>
-                                        <th>Parent's Name</th>
-                                        <th>Parent's Phone</th>
-                                        <th>Email</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        students.length > 0 && (
-                                            students.map((obj, index) => {
-                                                const { _id, regNum, firstName, lastName, dateOfBirth, homeAddress, schoolName, parentsName, parentsPhone, email } = obj
-                                                return (
-                                                    <tr key={_id}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{regNum}</td>
-                                                        <td>{firstName}</td>
-                                                        <td>{lastName}</td>
-                                                        <td>{dateOfBirth}</td>
-                                                        <td>{homeAddress}</td>
-                                                        <td>{schoolName}</td>
-                                                        <td>{parentsName}</td>
-                                                        <td>{parentsPhone}</td>
-                                                        <td>{email}</td>
-                                                        <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setStudentId(_id)
-                                                            oneStudentFetchHandler(_id)
-                                                        }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => studentDeleteHandler(e, _id)}>Delete</a></td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )
+                            <div className="data-form">
+                                <h2>Manage Students</h2>
+                                <form>
+                                    <div className="inputs">
+                                        <InputBox placeText="First Name" defaultValue={firstName} type="text" inputState={firstNameState} />
+                                        <InputBox placeText="Last Name" defaultValue={lastName} type="text" inputState={lastNameState} />
+                                        <div className="date">
+                                            <label className="date-text" htmlFor="date_picker">Date of Birth</label>
+                                            <input type="date" id="date_picker" max={new Date().toISOString().split("T")[0]} className="date-picker" value={dob} onChange={(e) => dobState(e.target.value)} />
+                                        </div>
+                                        <div className="select-box">
+                                            <label className="drop-text" htmlFor="drop-gender1">Gender</label>
+                                            <select id="drop-gender1" value={gender} className="frm-drop" onChange={(e) => genderState(e.target.value)}>
+                                                <option value=""></option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                        <textarea className="textarea-box" placeholder="Home Address" value={homeAddress} type="text" onChange={(e) => homeAddressState(e.target.value)}></textarea>
+                                        <InputBox placeText="School Name" defaultValue={schoolName} type="text" inputState={schoolNameState} />
+                                        <InputBox placeText="Parent's Name" defaultValue={parentsName} type="text" inputState={parentsNameState} />
+                                        <InputBox placeText="Parent's Phone" defaultValue={parentsPhone} type="text" inputState={parentsPhoneState} />
+                                        <InputBox placeText="Email" defaultValue={email} type="text" inputState={emailState} />
+                                        <InputBox placeText={!studentId ? "Password" : "New Password (Leave it empty to keep it unchanged)"} defaultValue={password} type="password" inputState={passwordState} />
+                                    </div>
+                                    <SubmitBtn clickFunc={!studentId ? studentCreateHandler : studentUpdateHandler} text={!studentId ? "Add a Student" : "Update a Student"} />
+                                    <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
+                                    {error &&
+                                        <div className="msg err">{error}</div>
                                     }
-                                </tbody>
-                            </table>
+                                    {success &&
+                                        <div className="msg success">{success}</div>
+                                    }
+                                </form>
+                            </div>
+                            <div className="data-table">
+                                <div>
+                                    <div className="search-sec">
+                                        <InputBox placeText="Search Students..." inputState={studentSearchHandler} />
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Registration Code</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Gender</th>
+                                                <th>Date of Birth</th>
+                                                <th>Home Address</th>
+                                                <th>School Name</th>
+                                                <th>Parent's Name</th>
+                                                <th>Parent's Phone</th>
+                                                <th>Email</th>
+                                                <th>Creation Date</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                students.length > 0 && (
+                                                    students.map((obj, index) => {
+                                                        const { _id, regNum, firstName, lastName, gender, dateOfBirth, homeAddress, schoolName, parentsName, parentsPhone, email, createdAt } = obj
+                                                        return (
+                                                            <tr key={_id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{regNum}</td>
+                                                                <td>{firstName}</td>
+                                                                <td>{lastName}</td>
+                                                                <td>{gender}</td>
+                                                                <td>{dateOfBirth}</td>
+                                                                <td>{homeAddress}</td>
+                                                                <td>{schoolName}</td>
+                                                                <td>{parentsName}</td>
+                                                                <td>{parentsPhone}</td>
+                                                                <td>{email}</td>
+                                                                <td>{createdAt}</td>
+                                                                <td className="td-btn td-edit"><a onClick={(e) => {
+                                                                    setStudentId(_id)
+                                                                    oneStudentFetchHandler(_id)
+                                                                }}>Edit</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => studentDeleteHandler(e, _id, regNum)}>Delete</a></td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </>
     )

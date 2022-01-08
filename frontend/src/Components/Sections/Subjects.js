@@ -4,6 +4,7 @@ import axios from "axios"
 
 import InputBox from "../Elements/InputBox"
 import SubmitBtn from "../Elements/SubmitBtn"
+import Loader from "../Elements/Loader"
 
 const Subjects = () => {
     // Subject data states
@@ -12,6 +13,9 @@ const Subjects = () => {
     const [name, setName] = useState("")
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    // Loading state
+    const [loading, setLoading] = useState(true)
 
     // Get jwt from local storage
     const userLoginData = localStorage.getItem("userLogin")
@@ -67,7 +71,7 @@ const Subjects = () => {
     // Subjects fetch handler
     const subjectsFetchHandler = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/subjects/`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}subjects/`, configCommon)
             if (data.authEx) {
                 alert(data.errors.message)
                 // Clear local storage
@@ -76,6 +80,7 @@ const Subjects = () => {
             }
             else {
                 setSubjects(data)
+                setLoading(false)
             }
         } catch (err) {
             alert(err.message)
@@ -84,7 +89,11 @@ const Subjects = () => {
 
     // Handle fetching all subjects
     useEffect(() => {
-        subjectsFetchHandler()
+        let isMounted = true
+        if (isMounted) {
+            subjectsFetchHandler()
+        }
+        return () => { isMounted = false }
     }, [])
 
     // Create subject handler
@@ -93,7 +102,7 @@ const Subjects = () => {
 
         // Api call
         try {
-            const { data } = await axios.post(`http://localhost:3300/api/subjects/create`, {
+            const { data } = await axios.post(`${process.env.REACT_APP_API_PREFIX}subjects/create`, {
                 name: name
             }, configPost)
 
@@ -130,7 +139,7 @@ const Subjects = () => {
     const oneSubjectFetchHandler = async (subjectId) => {
         // Api call
         try {
-            const { data } = await axios.get(`http://localhost:3300/api/subjects/${subjectId}`, configCommon)
+            const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}subjects/${subjectId}`, configCommon)
 
             if (data.authEx) {
                 alert(data.errors.message)
@@ -154,7 +163,7 @@ const Subjects = () => {
 
         // Api call
         try {
-            const { data } = await axios.put(`http://localhost:3300/api/subjects/${subjectId}`, {
+            const { data } = await axios.put(`${process.env.REACT_APP_API_PREFIX}subjects/${subjectId}`, {
                 name: name
             }, configPost)
 
@@ -194,7 +203,7 @@ const Subjects = () => {
         if (window.confirm("Are you really want to delete this subject?")) {
             // Api call
             try {
-                const { data } = await axios.delete(`http://localhost:3300/api/subjects/${subjectId}`, configCommon)
+                const { data } = await axios.delete(`${process.env.REACT_APP_API_PREFIX}subjects/${subjectId}`, configCommon)
 
                 if (data.created) {
                     alert(data.success.message)
@@ -222,7 +231,7 @@ const Subjects = () => {
     const subjectSearchHandler = async (query) => {
         if (query) {
             try {
-                const { data } = await axios.get(`http://localhost:3300/api/subjects/search/${query}`, configCommon)
+                const { data } = await axios.get(`${process.env.REACT_APP_API_PREFIX}subjects/search/${query}`, configCommon)
                 setSubjects(data)
             } catch (err) {
                 alert(err.message)
@@ -236,59 +245,65 @@ const Subjects = () => {
     return (
         <>
             <div className="data-content">
-                <div>
-                    <div className="data-form">
-                        <h2>Manage Subjects</h2>
-                        <form>
-                            <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
-                            <SubmitBtn clickFunc={!subjectId ? subjectCreateHandler : subjectUpdateHandler} text={!subjectId ? "Add a Subject" : "Update a Subject"} />
-                            <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
-                            {error &&
-                                <div className="msg err">{error}</div>
-                            }
-                            {success &&
-                                <div className="msg success">{success}</div>
-                            }
-                        </form>
-                    </div>
-                    <div className="data-table">
+                {
+                    loading ? (
+                        <Loader />
+                    ) : (
                         <div>
-                            <div className="search-sec">
-                                <InputBox placeText="Search Subjects..." inputState={subjectSearchHandler} />
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        subjects.length > 0 && (
-                                            subjects.map((obj, index) => {
-                                                const { _id, name } = obj
-                                                return (
-                                                    <tr key={_id}>
-                                                        <td>{index + 1}</td>
-                                                        <td>{name}</td>
-                                                        <td className="td-btn td-edit"><a onClick={(e) => {
-                                                            setSubjectId(_id)
-                                                            oneSubjectFetchHandler(_id)
-                                                        }}>Edit</a></td>
-                                                        <td className="td-btn td-del"><a onClick={(e) => subjectDeleteHandler(e, _id)}>Delete</a></td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )
+                            <div className="data-form">
+                                <h2>Manage Subjects</h2>
+                                <form>
+                                    <InputBox placeText="Name" defaultValue={name} type="text" inputState={nameState} />
+                                    <SubmitBtn clickFunc={!subjectId ? subjectCreateHandler : subjectUpdateHandler} text={!subjectId ? "Add a Subject" : "Update a Subject"} />
+                                    <a className="clear-btn" onClick={(e) => clearAll(e)}>Clear All</a>
+                                    {error &&
+                                        <div className="msg err">{error}</div>
                                     }
-                                </tbody>
-                            </table>
+                                    {success &&
+                                        <div className="msg success">{success}</div>
+                                    }
+                                </form>
+                            </div>
+                            <div className="data-table">
+                                <div>
+                                    <div className="search-sec">
+                                        <InputBox placeText="Search Subjects..." inputState={subjectSearchHandler} />
+                                    </div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                subjects.length > 0 && (
+                                                    subjects.map((obj, index) => {
+                                                        const { _id, name } = obj
+                                                        return (
+                                                            <tr key={_id}>
+                                                                <td>{index + 1}</td>
+                                                                <td>{name}</td>
+                                                                <td className="td-btn td-edit"><a onClick={(e) => {
+                                                                    setSubjectId(_id)
+                                                                    oneSubjectFetchHandler(_id)
+                                                                }}>Edit</a></td>
+                                                                <td className="td-btn td-del"><a onClick={(e) => subjectDeleteHandler(e, _id)}>Delete</a></td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                )
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </>
     )

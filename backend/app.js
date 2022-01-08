@@ -10,6 +10,9 @@ const subjectRoutes = require("./routes/subjectRoutes")
 const gradeRoutes = require("./routes/gradeRoutes")
 const groupRoutes = require("./routes/groupRoutes")
 const classRoutes = require("./routes/classRoutes")
+const assignmentRoutes = require("./routes/assignmentRoutes")
+const meetingRoutes = require("./routes/meetingRoutes")
+const { authUser } = require("./middleware/auth")
 
 // Common middleware
 app.use(cors());
@@ -30,16 +33,22 @@ app.use('/api/students', studentRoutes)
 app.use('/api/teachers', teacherRoutes)
 
 // Subject routes middleware
-app.use('/api/subjects', subjectRoutes)
+app.use('/api/subjects', authUser, subjectRoutes)
 
 // Grade routes middleware
-app.use('/api/grades', gradeRoutes)
+app.use('/api/grades', authUser, gradeRoutes)
 
 // Group routes middleware
-app.use('/api/groups', groupRoutes)
+app.use('/api/groups', authUser, groupRoutes)
 
 // Class routes middleware
-app.use('/api/classes', classRoutes)
+app.use('/api/classes', authUser, classRoutes)
+
+// Assignment routes middleware
+app.use('/api/assignments', authUser, assignmentRoutes)
+
+// Meeting routes middleware
+app.use('/api/meetings', authUser, meetingRoutes)
 
 // Bind the connection and listen
 app.listen(PORT, () => {

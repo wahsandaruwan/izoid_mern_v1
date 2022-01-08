@@ -1,24 +1,23 @@
 const express = require('express')
 const router = express.Router()
 const { subjectCreate, getAllSubjects, getSubjectById, updateSubject, deleteSubject, getSubjectsBySearch } = require("../controllers/subjectController")
-const { authUser } = require("../middleware/auth")
 
 // Subject create route
-router.post("/create", authUser, subjectCreate)
+router.post("/create", subjectCreate)
 
 // Get all subjects route
-router.get("/", authUser, getAllSubjects)
+router.get("/", getAllSubjects)
 
 // Get a subject by id route
-router.get("/:id", authUser, getSubjectById)
+router.get("/:id", getSubjectById)
 
 // Update a subject route
-router.put("/:id", authUser, updateSubject)
+router.put("/:id", updateSubject)
 
 // Delete a subject route
-router.delete("/:id", authUser, deleteSubject)
+router.delete("/:id", deleteSubject)
 
 // Get subjects by search query
-router.get("/search/:searchQuery", authUser, getSubjectsBySearch)
+router.get("/search/:searchQuery", getSubjectsBySearch)
 
 module.exports = router

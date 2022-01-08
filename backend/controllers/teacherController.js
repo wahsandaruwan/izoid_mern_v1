@@ -1,11 +1,14 @@
 const Teacher = require("../models/teacherModel")
+const Admin = require("../models/adminModel")
+const Student = require("../models/studentModel")
+const Class = require("../models/classModel")
 const bcrypt = require("bcrypt")
-const { randomReg } = require("../helpers/randomGen")
+const { randomReg, randomJWT } = require("../helpers/randomGen")
 const { sendEmail } = require('../helpers/sendEmail')
 
 // Teacher registration
 exports.teacherRegistration = async (req, res) => {
-    const { firstName, lastName, phone, email, password } = req.body
+    const { firstName, lastName, gender, phone, email, password } = req.body
     let newPass = "";
 
     // Generate random reg number
@@ -20,6 +23,13 @@ exports.teacherRegistration = async (req, res) => {
         else if (teacher[0].regNum === regNum) {
             return res.json({ errors: { message: "Something went wrong try again!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailAdmin = await Admin.findOne({ email })
+    const emailStudent = await Student.findOne({ email })
+    if (emailAdmin || emailStudent) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     // Password hashing
@@ -42,6 +52,7 @@ exports.teacherRegistration = async (req, res) => {
         firstName: firstName,
         lastName: lastName,
         type: "Teacher",
+        gender: gender,
         phone: phone,
         email: email,
         password: newPass
@@ -55,6 +66,32 @@ exports.teacherRegistration = async (req, res) => {
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
     }
+}
+
+// Teacher login
+exports.teacherLogin = async (req, res) => {
+    const { type, email, password } = req.body
+
+    // Check if reg num already exists
+    const teacher = await Teacher.findOne({ email })
+    if (!teacher) {
+        return res.json({ errors: { message: "Wrong email address!" } })
+    }
+
+    // Check if password matches
+    const passOk = await bcrypt.compare(password, teacher.password)
+    if (!passOk) {
+        return res.json({ errors: { message: "Wrong password!" } })
+    }
+
+    // Confirm the type
+    if (!type === "Teacher") {
+        return res.json({ errors: { message: "Wrong user type!" } })
+    }
+
+    // Generate jwt
+    const jwt = randomJWT(teacher)
+    res.status(200).json({ auth: true, token: jwt, regNum: teacher.regNum, firstName: teacher.firstName, type: teacher.type })
 }
 
 // Get all teachers
@@ -102,12 +139,19 @@ exports.updateTeacher = async (req, res) => {
         }
     }
 
-    // Check if email already exists
+    // Check email already exists
     const teacherByEmail = await Teacher.findOne({ email })
     if (teacherByEmail) {
         if (teacherByEmail.id !== id) {
             return res.json({ errors: { message: "Email already exist!" } })
         }
+    }
+
+    // Check email exist in other collections
+    const emailAdmin = await Admin.findOne({ email })
+    const emailStudent = await Student.findOne({ email })
+    if (emailAdmin || emailStudent) {
+        return res.json({ errors: { message: "Email already exist!" } })
     }
 
     try {
@@ -124,10 +168,13 @@ exports.updateTeacher = async (req, res) => {
 
 // Delete a teacher
 exports.deleteTeacher = async (req, res) => {
-    const { id } = req.params
+    const { regNum, id } = req.params
 
     try {
         await Teacher.findByIdAndDelete(id)
+        // Delete teacher from classes
+        await Class.updateMany({ teacherReg: regNum }, { $set: { teacherReg: "Not Assigned" } }, { multi: true })
+
         res.status(200).json({ created: true, success: { message: "Teacher successfully deleted!" } })
     } catch (err) {
         res.json({ errors: { message: Object.entries(err.errors)[0][1].message } })
@@ -140,7 +187,7 @@ exports.getTeachersBySearch = async (req, res) => {
 
     try {
         const regexQuery = new RegExp(searchQuery, 'i')
-        const teachers = await Teacher.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { phone: regexQuery }, { email: regexQuery }] })
+        const teachers = await Teacher.find({ $or: [{ regNum: regexQuery }, { firstName: regexQuery }, { lastName: regexQuery }, { phone: regexQuery }, { email: regexQuery }, { createdAt: regexQuery }] })
         res.status(200).json(teachers)
     } catch (err) {
         res.json({ errors: { message: err.message } })
